@@ -1,5 +1,7 @@
 #RCP100
 
+Written by RCPTeam (rcpteam at yahoo dot com) [Project Website](http://rcp100.sourceforge.net/)
+
 ###Installing RCP100 using the source code package
 
 RCP100 software should compile and run on any recent Linux 64bit system. Before you start, you need to install a number of additional packages:
