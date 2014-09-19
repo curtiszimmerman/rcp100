@@ -1,0 +1,35 @@
+M:CLIMODE_CONFIG
+C:ip dns server [rate-limit <u,1,2048>]:cliIpDnsServer
+C:[no] ip dns server:cliIpDnsServer
+
+H:ip:IP configuration
+H:dns:Enable DNS server
+H:server:Server
+H:rate-limit:Forwarding rate limit
+H:<u,1,2048>:Packets per second
+
+M:CLIMODE_ALL
+C:show ip host:cliShowIpHost
+C:show ip dns statistics:cliShowIpDnsStats
+
+H:ip:IP configuration
+H:show:Show running system information
+H:host:Host table
+H:dns:Domain Name Server
+H:statistics:Packet statistics
+
+M:CLIMODE_ALL_ENABLE
+C:clear ip host:cliClearIpHost
+C:clear ip dns statistics:cliClearIpDnsStats
+
+H:ip:IP configuration
+H:clear:Delete dynamic information
+H:host:Host table
+H:dns:Domain Name Server
+H:statistics:Packet statistics
+
+M:CLIMODE_ALL
+C:debug dns shutdown:cliDebugDnsShutdown
+H:debug:Modify debugging parameters
+H:dns:DNS
+H:shutdown:Shutdown DNS process

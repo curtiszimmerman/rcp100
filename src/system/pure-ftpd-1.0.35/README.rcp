@@ -1,0 +1,5 @@
+This version of pure-ftpd was modified in order to be included
+in RCP project as follows:
+- authenticate users using RCP library
+- removed TLS and openSSL support
+

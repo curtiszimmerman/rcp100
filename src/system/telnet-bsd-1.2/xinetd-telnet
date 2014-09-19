@@ -1,0 +1,17 @@
+# default: on
+# description: The telnet server serves telnet sessions; it uses \
+#	unencrypted username/password pairs for authentication.
+service rcptelnet
+{
+        type = UNLISTED
+	disable	= no
+	flags		= REUSE
+	socket_type	= stream
+	instances	= 32
+	wait		= no
+	user		= root
+	server		= /opt/rcp/extbin/in.telnetd
+	server_args     = -n -L /opt/rcp/extbin/rcplogin
+	log_on_failure	+= USERID
+        port = 23
+}

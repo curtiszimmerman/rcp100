@@ -1,0 +1,93 @@
+29-Jul-2000:
+	Have tftp bind to the same address inetd was listening to, 
+	  if it's not INADDR_ANY.
+
+22-Jul-2000:
+	Fixes for file size limit bugs. Also, a few Solaris patches.
+	  (Ignacio Goyret, igoyret@acm.org)
+	Switch to sigaction() and remove test for BSD signal semantics.
+
+28-Apr-2000:
+	Bug fix: it seems if you started tftp and just pressed return,
+	  it would core... (Philipp Rumpf, prumpf@tux.org)
+
+14-Dec-1999:
+	netkit-tftp-0.16 is released.
+
+14-Sep-1999:
+	Log attempts to use ".." in filenames in tftpd. Also don't spew
+	  every request at LOG_ERR; use LOG_NOTICE. (Olaf Kirch, 
+	  okir@caldera.de)
+
+1-Aug-1999:
+	Did complete y2k and y2038 audit. 
+
+31-Jul-1999:
+	Redid makefiles/config stuff for new confgen version.
+
+31-Jul-1999:
+	Clean up file mode handling in tftpd.
+	Fix tftp to not use gets(3).
+	
+23-Sep-1997:
+	tftpd should now refuse to run as root and bail if it can't find
+	"nobody". 
+	tftpd now opens with O_TRUNC when opening files for write.
+	(Dick Porter, dick@cymru.net)
+
+12-Jun-1997:
+	netkit-tftp-0.10 released.
+
+05-Apr-1997:
+	Added configure script to generate MCONFIG.
+
+08-Mar-1997: 
+	Split from full NetKit package. 
+	Generated this change log from NetKit's.
+
+07-Mar-1997
+	Fixed tftpd to prevent using .. in a way that had been overlooked.
+	  (Marcus Better, Marcus.Better@abc.se)
+
+29-Dec-1996
+	NetKit-0.09 released.
+	Assorted alpha/glibc patches. (Erik Troan, ewt@redhat.com)
+	Assorted bug fixes from Debian. (Peter Tobias, 
+	  tobias@et-inf.fho-emden.de)
+	Hardened programs against DNS h_length spoofing attacks.
+	Use inet_aton() everywhere instead of inet_addr().
+	Fixes to tftpd. (Pekka Pietik{inen, pp@netppl.fi)
+
+22-Aug-1996
+	NetKit-B-0.08 released.
+	(almost) everything now compiles with lots of warnings turned on.
+	Fixed possible DNS spoofing buffer overrun vulnerability in tftp.
+
+25-Jul-1996
+	NetKit-B-0.07A released.
+
+23-Jul-1996
+	NetKit-B-0.07 released.
+	Integrated a collection of patches that had been lurking on the net,
+	  including the 256-ptys support for telnetd and passive mode ftp.
+	Major security fixes, including to fingerd, lpr, rlogin, rsh, talkd, 
+	  and telnetd. Do *not* use the sliplogin from earlier versions of this
+	  package, either.
+	Much of the code builds without libbsd.a or bsd includes.
+	Massive code cleanup. Almost everything compiles clean with gcc
+	  -Wall now. rusers and rusersd do not; patches to rpcgen to fix
+	  this would be appreciated if anyone feels like it.
+	New maintainer:  David A. Holland, dholland@hcs.harvard.edu
+
+date not known
+	NetKit-B-0.06 released.
+
+date not known
+	NetKit-B-0.05 released.
+
+date not known
+	NetKit-B-0.04 released.
+
+date not known
+	NetKit-B-0.03 released.
+

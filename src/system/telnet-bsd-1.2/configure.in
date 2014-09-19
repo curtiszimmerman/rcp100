@@ -1,0 +1,56 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT
+AC_CONFIG_SRCDIR([telnet/telnet.c])
+AC_CANONICAL_TARGET([])
+AM_INIT_AUTOMAKE("telnet-bsd", 1.2)
+AC_CONFIG_HEADERS([config.h])
+AC_PREFIX_DEFAULT(/usr)
+
+dnl Set of available languages.
+ALL_LINGUAS="de"
+
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+
+if test x"$ac_default_prefix" = x"/usr"
+then
+	if test x"${mandir}" = x'${prefix}/man'
+	then
+		mandir='${prefix}/share/man'
+	fi
+fi
+
+EXTRA_CFLAGS="-W -Wall -Wbad-function-cast -Wcast-align -Wcast-qual -DXTSTRINGDEFINES -Winline -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wshadow -Wstrict-prototypes -Wundef"
+AC_SUBST(EXTRA_CFLAGS)
+dnl Checks for programs.
+AC_PROG_CC
+AC_ISC_POSIX
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+AC_CACHE_CHECK(for -fpie, libc_cv_fpie, [dnl
+  cat > conftest.c <<EOF
+int foo;
+main () { return 0;}
+EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -fpie
+                              -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_cv_fpie=yes
+    PIE_CFLAGS="-fpie"
+    PIE_LDFLAGS="-pie"
+  else
+    libc_cv_fpie=no
+    PIE_CFLAGS=""
+    PIE_LDFLAGS=""
+  fi
+  rm -f conftest*])
+AC_SUBST(libc_cv_fpie)
+AC_SUBST(PIE_CFLAGS)
+AC_SUBST(PIE_LDFLAGS)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+
+AC_CONFIG_FILES([Makefile m4/Makefile telnet/Makefile telnetd/Makefile])
+AC_OUTPUT

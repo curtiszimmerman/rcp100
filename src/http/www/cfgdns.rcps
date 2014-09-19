@@ -1,0 +1,191 @@
+<!DOCTYPE html><html>
+<head><title>DNS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var cmd = "no ip name-server && no ip domain-name && ";
+	
+	if (idr1.value.length) {
+		if (!checkHostname(idr1.value)) {
+			printError("Error: invalid hostname<br/>");
+			return;
+		}
+		cmd += "hostname " + idr1.value + " && "
+	}
+			
+	if (idr2.value.length) {
+		if (!checkHostname(idr2.value)) {
+			printError("Error: invalid domain name<br/>");
+			return;
+		}
+		cmd += "ip domain-name " + idr2.value + " && "
+	}
+	
+	if (idr3.value.length) {
+		if (checkIp(idr3.value) == 0) {
+			printError("Error: invalid IP address for name server 1<br/>");
+			return;
+		}
+		cmd += "ip name-server " + idr3.value + " && "
+	}
+		
+	if (idr4.value.length) {
+		if (checkIp(idr4.value) == 0) {
+			printError("Error: invalid IP address for name server 2<br/>");
+			return;
+		}
+		cmd += "ip name-server " + idr4.value + " && "
+	}
+	
+	if (idr5server.value == "enabled")
+		cmd += "ip dns server && ";
+	else
+		cmd += "no ip dns server && ";
+	
+	cmd += " && copy run start";
+	restCmd(cmd);
+}
+
+function showConfig() {
+	var cmd = "show configuration dns";
+	restCmd(cmd);
+}
+
+function addHost() {
+	if (idr5.value.length == 0) {
+		printError("Error: no host specified<br/>");
+		return;
+	}
+	else {
+		if (!checkHostname(idr5.value)) {
+			printError("Error: invalid host<br/>");
+			return;
+		}
+	}
+	if (idr6.value.length == 0) {
+		printError("Error: no IP address specified<br/>");
+		return;
+	}
+	if (checkIp(idr6.value) == 0) {
+		printError("Error: invalid IP address<br/>");
+		return;
+	}
+
+	var cmd = "ip host " + idr5.value + " " + idr6.value + " && copy run start";
+	restCmd(cmd);
+}
+
+function delHost() {
+	if (idr5.value.length == 0) {
+		printError("Error: no host specified<br/>");
+		return;
+	}
+
+	var cmd = "no ip host " + idr5.value + " && copy run start";
+	restCmd(cmd);
+}
+</script>
+</head>
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/><form name="myform" method="post">
+<br/><table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>DNS Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Hostname</td>
+<td><input name="r1" type="text" id="idr1" size="16" maxlength="16" value="<?rcps dns_hostname>"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Domain name</td>
+<td><input name="r2" type="text" id="idr2" size="30" maxlength="64" value="<?rcps dns_domain>"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Name Servers (IP addresses)</td>
+<td></td><td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r3" type="text" id="idr3" size="15" maxlength="15" value="<?rcps dns_ns1>"/></td>
+<td><input name="r4" type="text" id="idr4" size="15" maxlength="15" value="<?rcps dns_ns2>"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>DNS Proxy</td>
+<td>
+<select name="status" id="idr5server">
+<option value="enabled" <?rcps dnss_enabled>>enabled</option>
+<option value="disabled" <?rcps dnss_disabled>>disabled</option>
+</select></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><b>Host management</b></td><td colspan="2"/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Host</td>
+<td><input name="r5" type="text" id="idr5" size="30" maxlength="64"/></td>
+<td></td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>IP Address</td>
+<td><input name="r6" type="text" id="idr6" size="15" maxlength="15"/></td>
+<td></td>
+</tr>
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="addHost()">Add Host</button>
+<button type="button" onclick="delHost()">Delete Host</button>
+</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

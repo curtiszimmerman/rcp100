@@ -1,0 +1,127 @@
+M:CLIMODE_ALL_ENABLE
+C:clear ip dhcp statistics:cliClearDhcpStatsCmd
+C:clear ip dhcp lease:cliClearDhcpLeaseCmd
+C:clear ip dhcp lease <ip>:cliClearDhcpLeaseIpCmd
+H:ip:IP configuration
+H:clear:Delete dynamic information
+H:dhcp:Dynamic Host Configuration Protocol
+H:statistics:Packet statistics
+H:lease:Active leases
+H:<ip>:Lease IP address
+
+#*******************************************
+# config mode
+#*******************************************
+M:CLIMODE_CONFIG
+C:no ip dhcp relay:cliNoIpDhcpRelay
+C:ip dhcp relay:cliIpDhcpRelayCmd
+C:no ip dhcp server:cliNoIpDhcpServer
+C:ip dhcp server:cliIpDhcpServerCmd
+C:[no] service dhcp:cliDhcpServerEnableCmd
+
+H:ip:IP configuration
+H:dhcp:Dynamic Host Configuration Protocol
+H:relay:DHCP relay
+H:service:Enable management services
+H:server:DHCP server
+
+#*******************************************
+# interface mode
+#*******************************************
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE
+C:[no] ip dhcp relay enable:cliDhcpRelayCmd
+H:ip:IP configuration
+H:dhcp:Dynamic Host Configuration Protocol
+H:relay:DHCP relay
+H:enable:Enable
+
+
+
+#*******************************************
+# dhcp relay mode
+#*******************************************
+M:CLIMODE_DHCP_RELAY
+C:[no] server-group <ip> [<ip>] [<ip>] [<ip>]:cliServerCmd
+C:no server-group:cliNoServerAll
+C:max-hops <i,1,16>:cliMaxHopsCmd
+C:no max-hops:cliMaxHopsCmd
+C:service-delay <i,0,100>:cliServiceDelayCmd
+C:no service-delay:cliServiceDelayCmd
+C:[no] option:cliOption
+
+H:server-group:DHCP server group
+H:<ip>:DHCP server IP address
+H:max-hops:Maximum number of hops
+H:<i,1,16>:Number of hops
+H:service-delay:Delay before sending the request to all servers
+H:<i,0,100>:Number of seconds
+H:option:Add DHCP Relay Agent Information (option 82)
+
+#*******************************************
+# dhcp server mode
+#*******************************************
+M:CLIMODE_DHCP_SERVER
+C:[no] network <cidrnet>:cliDhcpServerNetwork
+C:no network:cliDhcpServerNoNetwork
+C:no domain-name:cliDhcpServerDomainName
+C:domain-name <domain>:cliDhcpServerDomainName
+C:no dns-server:cliDhcpServerDns
+C:dns-server <ip> [<ip>]:cliDhcpServerDns
+C:no ntp-server:cliDhcpServerNtp
+C:ntp-server <ip> [<ip>]:cliDhcpServerNtp
+C:host <ip> <mac>:cliDhcpServerHost
+C:no host <ip>:cliDhcpServerHost
+H:<cidrnet>:IP address and prefix length
+H:network:Network
+H:domain-name:Domanin name
+H:<domain>:Domain name
+H:dns-server:DNS server
+H:<ip>:IP address
+H:ntp-server:Network Time Protocol server
+H:host:Static lease
+H:<mac>:MAC address
+
+#*******************************************
+# dhcp network mode
+#*******************************************
+M:CLIMODE_DHCP_NETWORK
+C:no lease:cliDhcpServerLease
+C:lease <i,0,4> <i,0,23> <i,0,59>:cliDhcpServerLease
+C:no range:cliDhcpServerRange
+C:range <ip1> <ip2>:cliDhcpServerRange
+C:no default-router:cliDhcpServerRouter
+C:default-router <ip> [<ip>]:cliDhcpServerRouter
+H:lease:Lease time
+H:<i,1,2800>:Lease time in minutes
+H:<ip>:IP address
+H:<ip1>:Start IP address for the range
+H:<ip2>:End IP address for the range
+H:default-router:Default router
+H:range:Address range
+H:<i,0,4>:Days
+H:<i,0,23>:Hours
+H:<i,0,59>:Minutes
+
+
+#*******************************************************************
+# DHCP show commands
+#*******************************************************************
+M:CLIMODE_ALL
+C:show ip dhcp [interfaces]:cliShowIpDhcp
+C:show ip dhcp servers:cliShowIpDhcpServers
+C:show ip dhcp leases:cliShowIpDhcpLeases
+H:show:Show running system information
+H:ip:IP information
+H:dhcp:Dynamic Host Configuration Protocol
+H:interfaces:Interface information
+H:servers:Server information
+H:leases:Active leases
+
+#*******************************************************************
+# DHCP debug commands
+#*******************************************************************
+M:CLIMODE_ALL_ENABLE
+C:debug dhcp lease-test:cliDebugDhcpLeaseTest
+H:debug:Modify debugging parameters
+H:dhcp:DHCP
+H:lease-test:Lease testing

@@ -1,0 +1,146 @@
+#*******************************************
+# Standard ACL
+#*******************************************
+M:CLIMODE_CONFIG
+C:[no] access-list <i,1,99> deny <cidrnet>:cliStandardAclCmd
+C:[no] access-list <i,1,99> deny any:cliStandardAclCmd
+C:[no] access-list <i,1,99> permit <cidrnet>:cliStandardAclCmd
+C:[no] access-list <i,1,99> permit any:cliStandardAclCmd
+
+H:access-list:Access control list
+H:deny:Drop packets
+H:permit:Allow packets
+H:<cidrnet>:Source network
+H:any:All IP addresses
+H:<i,1,99>:Standard ACL number
+
+#*******************************************
+# Extended ACL
+#*******************************************
+M:CLIMODE_CONFIG
+C:no access-list <i,100,199>:cliNoAclCmd
+C:no access-list <i,1,99>:cliNoAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] <cidrnet> <cidrnet-destination> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] any <cidrnet-destination> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] <cidrnet> any [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] any any [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] <cidrnet> out-interface <interface> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] [<i,0,255>] any out-interface <interface> [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> deny [<mac>] tcp <cidrnet> [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] tcp any [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] tcp <cidrnet> [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] tcp any [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> deny [<mac>] udp <cidrnet> [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] udp any [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] udp <cidrnet> [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> deny [<mac>] udp any [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> deny [<mac>] icmp <cidrnet> <cidrnet-destination> [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> deny [<mac>] icmp any <cidrnet-destination> [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> deny [<mac>] icmp <cidrnet> any [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> deny [<mac>] icmp any any [<icmp-type>]:cliAclIcmpCmd
+
+
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] <cidrnet> <cidrnet-destination> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] any <cidrnet-destination> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] <cidrnet> any [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] any any [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] <cidrnet> out-interface <interface> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] [<i,0,255>] any out-interface <interface> [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> permit [<mac>] tcp <cidrnet> [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] tcp any [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] tcp <cidrnet> [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] tcp any [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] tcp <cidrnet> [<port>] out-interface <interface> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] tcp any [<port>]  out-interface <interface> [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> permit [<mac>] udp <cidrnet> [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] udp any [<port>] <cidrnet-destination> [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] udp <cidrnet> [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] udp any [<port>] any [<port-destination>] [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] udp <cidrnet> [<port>] out-interface <interface> [<connection-state>]:cliAclCmd
+C:[no] access-list <i,100,199> permit [<mac>] udp any [<port>]  out-interface <interface> [<connection-state>]:cliAclCmd
+
+C:[no] access-list <i,100,199> permit [<mac>] icmp <cidrnet> <cidrnet-destination> [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> permit [<mac>] icmp any <cidrnet-destination> [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> permit [<mac>] icmp <cidrnet> any [<icmp-type>]:cliAclIcmpCmd
+C:[no] access-list <i,100,199> permit [<mac>] icmp any any [<icmp-type>]:cliAclIcmpCmd
+
+
+H:deny:Drop packets
+H:permit:Allow packets
+H:<i,0,255>:Protocol number as specified in RFC 1700
+H:<cidrnet>:Source network
+H:<cidrnet-destination>:Destination network
+H:tcp:TCP packets
+H:udp:UDP packets
+H:icmp:ICMP packets
+H:<mac>:Source MAC address
+H:<port>:Source port number
+H:<port-destination>:Destination port number
+H:any:All IP addresses
+H:access-list:Access control list
+H:<i,100,199>:Extended ACL number
+H:<i,1,99>:Simple ACL number
+H:out-interface:Output interface
+H:<interface>:Interface name
+H:<connection-state>:Connection: new,established,related,invalid
+H:<icmp-type>:ICMP type number
+#*******************************************
+# Interface
+#*******************************************
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE
+C:ip access-group <i,1,199> in:cliAclGroupCmd
+C:no ip access-group in:cliNoAclGroupCmd
+C:ip access-group <i,1,199> out:cliAclGroupCmd
+C:no ip access-group out:cliNoAclGroupCmd
+C:ip access-group <i,1,199> forward:cliAclGroupCmd
+C:no ip access-group forward:cliNoAclGroupCmd
+
+H:access-group:Apply an access control list
+H:<i,1,199>:Access control list number
+H:in:Incoming interface packets for local processes
+H:out:Outgoing interface packets from local processes
+H:forward:Forwarded interface packets
+
+
+#*******************************************************************
+# Masquerade NAT
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:ip nat masquerade <cidrnet> <interface>:cliMasqCmd
+C:no ip nat masquerade <cidrnet>:cliMasqCmd
+H:nat:Network Address Translation
+H:masquerade:Masquerade NAT
+H:<cidrnet>:Internal address range to be translated
+H:<interface>:Outside interface
+
+M:CLIMODE_ALL
+C:show ip nat:cliShowNat
+H:nat:Network Address Translation
+
+#*******************************************************************
+# Port forwarding
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:ip nat forwarding tcp <port> destination <ip> <port-destination>:cliForwardingCmd
+C:no ip nat forwarding tcp <port>:cliForwardingCmd
+H:nat:Network Address Translation
+H:forwarding:Port forwarding
+H:tcp:Transmission Control Protocol
+H:<port>:Port number to be forwarding
+H:destination:Destination
+H:<ip>:Destination IP address
+H:<port-destination>:Destination port
+
+#*******************************************
+# Show commands
+#*******************************************
+M:CLIMODE_ALL
+C:show access-list statistics:cliShowAclStatistics
+H:access-list:Access Control List
+H:statistics:Statistics
+

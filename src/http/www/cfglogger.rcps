@@ -1,0 +1,287 @@
+<!DOCTYPE html><html>
+<head><title>Logger</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var cmd = "no logging host && ";
+	
+	if (idr1.value.length) {
+		if (checkIp(idr1.value) == 0) {
+			printError("Error: invalid IP address for host 1<br/>");
+			return;
+		}
+		
+		if (idr1p.value.length != 0 && checkPort(idr1p.value) == 0) {
+			printError("Error: invalid port number for host 1<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr1p.value.length == 0) {
+			cmd += "logging host " + idr1.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr1.value + " port " + idr1p.value + " && ";
+		}
+	}		
+	if (idr2.value.length) {
+		if (checkIp(idr2.value) == 0) {
+			printError("Error: invalid IP address for host 2<br/>");
+			return;
+		}
+		
+		if (idr2p.value.length != 0 && checkPort(idr2p.value) == 0) {
+			printError("Error: invalid port number for host 2<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr2p.value.length == 0) {
+			cmd += "logging host " + idr2.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr2.value + " port " + idr2p.value + " && ";
+		}
+	}		
+	if (idr3.value.length) {
+		if (checkIp(idr3.value) == 0) {
+			printError("Error: invalid IP address for host 3<br/>");
+			return;
+		}
+		
+		if (idr3p.value.length != 0 && checkPort(idr3p.value) == 0) {
+			printError("Error: invalid port number for host 3<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr3p.value.length == 0) {
+			cmd += "logging host " + idr3.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr3.value + " port " + idr3p.value + " && ";
+		}
+	}		
+	if (idr4.value.length) {
+		if (checkIp(idr4.value) == 0) {
+			printError("Error: invalid IP address for host 4<br/>");
+			return;
+		}
+		
+		if (idr4p.value.length != 0 && checkPort(idr4p.value) == 0) {
+			printError("Error: invalid port number for host 4<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr4p.value.length == 0) {
+			cmd += "logging host " + idr4.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr4.value + " port " + idr4p.value + " && ";
+		}
+	}		
+	if (idr5.value.length) {
+		if (checkIp(idr5.value) == 0) {
+			printError("Error: invalid IP address for host 5<br/>");
+			return;
+		}
+		
+		if (idr5p.value.length != 0 && checkPort(idr5p.value) == 0) {
+			printError("Error: invalid port number for host 5<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr5p.value.length == 0) {
+			cmd += "logging host " + idr5.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr5.value + " port " + idr5p.value + " && ";
+		}
+	}		
+	if (idr6.value.length) {
+		if (checkIp(idr6.value) == 0) {
+			printError("Error: invalid IP address for host 6<br/>");
+			return;
+		}
+		
+		if (idr6p.value.length != 0 && checkPort(idr6p.value) == 0) {
+			printError("Error: invalid port number for host 6<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr6p.value.length == 0) {
+			cmd += "logging host " + idr6.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr6.value + " port " + idr6p.value + " && ";
+		}
+	}		
+	if (idr7.value.length) {
+		if (checkIp(idr7.value) == 0) {
+			printError("Error: invalid IP address for host 7<br/>");
+			return;
+		}
+		
+		if (idr7p.value.length != 0 && checkPort(idr7p.value) == 0) {
+			printError("Error: invalid port number for host 7<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr7p.value.length == 0) {
+			cmd += "logging host " + idr7.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr7.value + " port " + idr7p.value + " && ";
+		}
+	}		
+	if (idr8.value.length) {
+		if (checkIp(idr8.value) == 0) {
+			printError("Error: invalid IP address for host 8<br/>");
+			return;
+		}
+		
+		if (idr8p.value.length != 0 && checkPort(idr8p.value) == 0) {
+			printError("Error: invalid port number for host 8<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+		
+		if (idr8p.value.length == 0) {
+			cmd += "logging host " + idr8.value + " && ";
+		}
+		else {
+			cmd += "logging host " + idr8.value + " port " + idr8p.value + " && ";
+		}
+	}		
+	
+	cmd += "logging " + idr9.value + " && ";
+
+	if (idr10.value == "enabled")
+		cmd += "logging snmp all && ";
+	else	
+		cmd += "no logging snmp && ";	
+
+	cmd += " && copy run start";
+	restCmd(cmd);
+}
+
+function showConfig() {
+	var cmd = "show configuration logger";
+	restCmd(cmd);
+}
+
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>System Logger Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+
+
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Logging level</td>
+<td>
+<select name="status" id="idr9">
+<option value="emergencies" <?rcps logs_emergencies>>emergencies</option>
+<option value="alerts" <?rcps logs_alerts>>alerts</option>
+<option value="critical" <?rcps logs_critical>>critical</option>
+<option value="errors" <?rcps logs_errors>>errors</option>
+<option value="warnings" <?rcps logs_warnings>>warnings</option>
+<option value="notifications" <?rcps logs_notifications>>notifications</option>
+<option value="informational" <?rcps logs_informational>>informational</option>
+<option value="debugging" <?rcps logs_debugging>>debugging</option>
+</select></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>SNMP logging</td>
+<td>
+<select name="status" id="idr10">
+<option value="enabled" <?rcps logsnmp_enabled>>enabled</option>
+<option value="disabled" <?rcps logsnmp_disabled>>disabled</option>
+</select></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><b>Log Servers</b> (IP address : port)</td>
+<td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r1" type="text" id="idr1" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r1p" type="text" id="idr1p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r2" type="text" id="idr2" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r2p" type="text" id="idr2p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r3" type="text" id="idr3" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r3p" type="text" id="idr3p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r4" type="text" id="idr4" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r4p" type="text" id="idr4p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r5" type="text" id="idr5" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r5p" type="text" id="idr5p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r6" type="text" id="idr6" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r6p" type="text" id="idr6p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r7" type="text" id="idr7" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r7p" type="text" id="idr7p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r8" type="text" id="idr8" size="15" maxlength="15" value="<?rcps logs_ip>"/> : <input name="r8p" type="text" id="idr8p" size="5" maxlength="5" value="<?rcps logs_port>"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

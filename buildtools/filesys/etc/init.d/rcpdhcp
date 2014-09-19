@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting dhcp relay" >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGDHCP+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcpdhcpd
+else
+	/opt/rcp/bin/rcpdhcpd
+fi

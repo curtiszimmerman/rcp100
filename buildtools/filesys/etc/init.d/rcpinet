@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DATE=`date`
+echo "INIT: $DATE: starting xinetd" >> /opt/rcp/var/log/restart
+while [ 1 ]
+do
+	/opt/rcp/sbin/xinetd -filelog /opt/rcp/var/log/xinetd -f /opt/rcp/etc/xinetd.conf -dontfork
+	/opt/rcp/bin/rcplog 6 "xinetd process terminated, restarting"
+	DATE=`date`
+	echo "INIT: $DATE: xinetd process terminated, restarting" >> /opt/rcp/var/log/restart
+	sleep 5
+done

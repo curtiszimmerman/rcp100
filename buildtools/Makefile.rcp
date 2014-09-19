@@ -1,0 +1,59 @@
+#*********************************************************
+# Distro
+#*********************************************************
+distro:
+	rm -fr distro
+	mkdir distro
+	cd distro; mkdir -p bin/plugins; mkdir sbin; mkdir persistent; mkdir etc; mkdir lib; mkdir libexec; mkdir -p var/log;
+	cd distro; rsync -av ../buildtools/filesys/* . > /dev/null; rm -fr `find . -name .svn`
+	cd distro; mkdir -p usr/src; mkdir -p usr/lib;  mkdir -p usr/bin; mkdir -p usr/share/doc; cp ../src/include/* usr/src/.; cp ../buildtools/cmdparser/cmdparser usr/bin/.
+	cd distro; cp ../COPYING usr/share/doc/.; cp ../README usr/share/doc/.; cp ../RELNOTES usr/share/doc/.
+	
+	
+#*********************************************************
+# Libraries
+#*********************************************************
+LIBRARIES = src/librcp
+
+.PHONY: libraries $(LIBRARIES)
+libraries: distro $(LIBRARIES)
+$(LIBRARIES): distro
+	$(MAKE) -C $@ $(MFLAGS)
+
+#*********************************************************
+# Programs
+#*********************************************************
+PROGRAMS += $(SYSTEM)
+
+.PHONY: programs $(PROGRAMS)
+programs: libraries $(PROGRAMS)
+$(PROGRAMS): libraries
+	$(MAKE) -C $@ $(MFLAGS)
+	
+#*********************************************************
+# After system build
+#*********************************************************
+.PHONY: after_system $(AFTER_SYSTEM)
+after_system: programs $(AFTER_SYSTEM)
+$(AFTER_SYSTEM): programs
+	$(MAKE) -C $@ $(MFLAGS)
+
+#*********************************************************
+# etc
+#*********************************************************
+clean:;
+	rm -fr distro
+	for dir in $(LIBRARIES) $(PROGRAMS) $(AFTER_SYSTEM); do \
+		$(MAKE) -C $$dir clean NODEP="1"; \
+	done
+
+distclean: clean
+	for dir in $(SYSTEM); do \
+		$(MAKE) -C $$dir distclean; \
+	done
+	rm -f Makefile version.h
+	$(MAKE) -C buildtools/cmdparser clean
+	rm -fr src/system/telnet-bsd-1.2/autom4te.cache
+	rm -fr src/system/pure-ftpd-1.0.35/autom4te.cache
+	
+

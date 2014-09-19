@@ -1,0 +1,24 @@
+# Dirs
+INSTALLROOT
+BINDIR
+MANDIR
+SBINDIR
+
+# Modes
+BINMODE
+DAEMONMODE
+MANMODE
+
+# Compiling
+ALLWARNINGS
+CC
+CFLAGS
+LDFLAGS
+LIBS
+
+# Features
+TYPE(socklen_t)
+
+# To run on Solaris we need to probe for -lsocket -lnsl
+# as well as whether we need to supply inet_aton() and herror()
+# (herror may be in -lresolv)

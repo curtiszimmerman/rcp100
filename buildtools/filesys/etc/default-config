@@ -1,0 +1,6 @@
+! default starup script
+hostname rcp
+administrator rcp password rcp
+service telnet
+service http password rcp
+

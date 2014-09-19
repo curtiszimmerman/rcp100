@@ -1,0 +1,27 @@
+service rcpftp
+{
+        type = UNLISTED
+        disable = no
+        socket_type     = stream
+        protocol        = tcp
+        instances       = 32
+        wait            = no
+        user            = root
+        server          = /opt/rcp/extbin/pure-ftpd
+        server_args     = -H -A -E -p 40000:50000 -c 32 -C 1 -u 500 -I 5
+        groups          = yes
+        flags           = REUSE
+        
+        port = 21
+}
+
+#-H --dontresolve
+#-A chroots everyone
+#-E only allows authenticated users; anonymous users disallowed
+#-p 40000:50000 specifies the port range for passive connections
+#-c 5 specifies the number of clients
+#-C 1 specifies the number of connections per IP address
+#-I 5 changes the idle timeout; default 15 minutes seems excessive 
+#-T 25 throttles the bandwidth to 25KB/sec per user
+#-u 1 allow access to all accounts but not root
+#-F banner file

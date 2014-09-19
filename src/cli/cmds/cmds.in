@@ -1,0 +1,180 @@
+# M:mode
+# C: command
+# H:help string
+
+#*******************************************************************
+# General system level commands in login mode
+#*******************************************************************
+M:CLIMODE_ALL
+C:show clock:cliShowClockCmd
+
+# exit the current mode, logout if in login mode
+C:exit:cliExitCmd
+
+# logout
+C:logout:cliLogoutCmd
+
+
+M:CLIMODE_LOGIN
+C:enable:cliEnableCmd
+
+M:CLIMODE_ALL
+C:ping <ip>:cliPingCmd
+C:ping <domain>:cliPingCmd
+C:telnet-client <ip> [port <port>]:cliTelnetCmd
+C:telnet-client <domain> [port <port>]:cliTelnetCmd
+C:traceroute <ip>:cliTracerouteCmd
+C:traceroute <domain>:cliTracerouteCmd
+
+H:show:Show running system information
+H:clock:System time information
+H:exit:Exit the current mode
+H:logout:Exit the session
+H:enable:Administration mode
+H:<ip>:IP address
+H:ping:Send echo messages
+H:<domain>:Hostname
+H:telnet-client:Open a telnet session
+H:port:Port number
+H:<port>:Port number
+H:traceroute:Trace route to destination
+
+M:CLIMODE_ALL
+S:{
+S:struct stat s;
+S:if (stat("/opt/rcp/bin/rcpsec", &s) == -1) {
+C:show services:cliShowServicesCmd
+H:services:Management services
+S:}
+S:}
+
+#*******************************************************************
+# General system level commands in enable mode
+#*******************************************************************
+M:CLIMODE_ALL_ENABLE
+C:dir:cliDirCmd
+C:copy running-config startup-config:cliCopyRunStartCmd
+C:copy <tftp-file> <file>:cliCopyTftpCmd
+C:copy <ftp-file> <file>:cliCopyFtpCmd
+C:copy <existing-file> <tftp-file>:cliCopyTftpCmd
+C:copy <existing-file> <ftp-file>:cliCopyFtpCmd
+C:copy <existing-file> <file>:cliCopyCmd
+C:delete <existing-file>:cliDeleteCmd
+
+M:CLIMODE_ALL
+C:show history:cliShowHistoryCmd
+C:show process:cliShowProcessCmd
+C:show process statistics:cliShowProcessCmd
+C:show version:cliShowVersionCmd
+
+M:CLIMODE_ENABLE
+C:configure:cliConfigureCmd
+
+M:CLIMODE_ALL_ENABLE
+C:show configuration:cliShowConfigurationCmd
+C:show configuration no-passwords:cliShowConfigurationCmd
+C:show configuration arp:cliShowConfigurationCmd
+C:show configuration dns:cliShowConfigurationCmd
+C:show configuration ntp:cliShowConfigurationCmd
+C:show configuration route:cliShowConfigurationCmd
+C:show configuration dhcp:cliShowConfigurationCmd
+C:show configuration rip:cliShowConfigurationCmd
+C:show configuration ospf:cliShowConfigurationCmd
+C:show configuration logger:cliShowConfigurationCmd
+C:show configuration administrators:cliShowConfigurationCmd
+C:show configuration services:cliShowConfigurationCmd
+C:show configuration interfaces:cliShowConfigurationCmd
+C:show configuration acl:cliShowConfigurationCmd
+C:show configuration nat:cliShowConfigurationCmd
+C:show configuration tunnel:cliShowConfigurationCmd
+C:show configuration monitor:cliShowConfigurationCmd
+C:show configuration snmp:cliShowConfigurationCmd
+C:show running-config:cliShowConfigurationCmd
+C:show startup-config:cliShowStartupConfigurationCmd
+
+H:dir:List files
+H:copy:Copy files
+H:<existing-file>:Source file
+H:<file>:Destination file
+H:delete:Delete files
+H:show:Show running system information
+H:history:Command history
+H:process:Active processes
+H:version:System software and hardware status
+H:configure:Configuration mode
+H:configuration:Show running configuration
+H:no:Negate a command or set its defaults
+H:running-config:System running configuration
+H:startup-config:System startup configuration
+H:no-passwords:Do not display passwords
+H:arp:Address Resolution Protocol
+H:ip:IP configuration
+H:route:Static route configuration
+H:dhcp:Dynamic Host Configuration Protocol
+H:router:Routing protocols configuration
+H:rip:Routing Information Protocol configuration
+H:logger:System logger configuration
+H:administrators:Administrators configuration
+H:services:Services configuration
+H:interfaces:Interfaces configuration
+H:acl:Access control lists configuration
+H:nat:Network Address Translation configuration
+H:tunnel:IPsec tunnel configuration
+H:monitor:Network Monitoring configuration
+H:dns:Domain Name Server configuration
+H:ntp:Network Time Protocol configuration
+H:statistics:Process statistics
+H:ospf:Open Short Path First
+H:snmp:Simple Network Management Protocol
+H:<tftp-file>:tftp://host/file
+H:<ftp-file>:ftp://user:password@host/file
+
+#*******************************************************************
+# Debug
+#*******************************************************************
+M:CLIMODE_ALL
+C:debug memory:cliDebugPrintCliMemCmd
+C:debug cli tree:cliDebugPrintTreeCmd
+C:[no] debug cli:cliDebugSessionCmd
+
+H:no:Negate a command or set its defaults
+H:cli:Command line interface
+H:debug:Modify debugging parameters
+H:memory:Internal memory
+H:tree:Parsing tree
+
+#*******************************************************************
+# interface commands
+#*******************************************************************
+M:CLIMODE_ALL
+C:show interface:cliShowInterfaceCmd
+C:show interface detail:cliShowInterfaceCmd
+
+H:show:Show running system information
+H:interface:Select interface
+H:detail:Detail
+
+#*******************************************************************
+# router show commands
+#*******************************************************************
+M:CLIMODE_ALL
+C:show arp:cliShowArp
+C:show ip route:cliShowIpRouteAll
+C:show ip route connected:cliShowIpRouteConnected
+C:show ip route static:cliShowIpRouteStatic
+C:show ip route blackhole:cliShowIpRouteBlackhole
+C:show ip route rip:cliShowIpRouteRip
+C:show ip route ospf:cliShowIpRouteOspf
+C:show ip route summary:cliShowIpRouteSummary
+
+H:show:Show running system information
+H:arp:Address Resolution Protocol information
+H:ip:IP information
+H:route:IP routing table
+H:connected:Directly connected routes
+H:static:Static routes
+H:blackhole:Blackhole routes
+H:rip:RIP routes
+H:ospf:OSPF routes
+H:summary:Route table summary
+

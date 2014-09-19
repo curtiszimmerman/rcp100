@@ -1,0 +1,136 @@
+<!DOCTYPE html><html>
+<head><title>Netmon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+
+function addMonitor() {
+	var cmd;
+	if (idr1h.value.length == 0) {
+		printError("Error: an IP address or a hostname has to be specified");
+		return;
+	}
+	else {
+		if (checkHostname(idr1h.value)) 
+			cmd = "monitor " + idr1.value + " " + idr1h.value + " ";
+		else {
+			printError("Error: invalid hostname or IP address");
+			return;
+		}
+	}
+
+	if (idr1.value== "tcp" || 
+	     (idr1.value == "http" && idr1p.value.length != 0) ||
+	     (idr1.value == "ssh" && idr1p.value.length != 0) ||
+	     (idr1.value == "smtp" && idr1p.value.length != 0) ||
+	     (idr1.value == "tcp" && idr1p.value.length != 0)) {
+		if (checkPort(idr1p.value) == 0) {
+			printError("Error: invalid port number<br/>");
+			addError("Please enter a value from 1 to 65535.");
+			return;
+		}
+	     
+	     cmd += idr1p.value;
+	}
+	
+	cmd += " && copy run start";  
+	restCmd(cmd);
+}
+
+function delMonitor() {
+	var cmd;
+	if (idr1h.value.length == 0) {
+		printError("Error: an IP address or a hostname has to be specified");
+		return;
+	}
+	else {
+		if (checkHostname(idr1h.value)) 
+			cmd = "no monitor " + idr1.value + " " + idr1h.value + " ";
+		else {
+			printError("Error: invalid hostname or IP address");
+			return;
+		}
+	}
+	
+	restCmd(cmd);
+}
+
+
+
+function showConfig() {
+	var cmd = "show configuration monitor";
+	restCmd(cmd);
+}
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="5" align="center" ><br/><h2>Configure Network Monitoring</h2><br/></td>
+</tr>
+
+<tr><td colspan="5" align="center" ><br/></tr>
+
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><b>Type</b></td>
+<td><b>Hostname or IP Address</b></td>
+<td><b>Port</b></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<select name="type" id="idr1">
+<option value="host" selected>Host (ICMP)</option>
+<option value="dns">DNS</option>
+<option value="http">HTTP</option>
+<option value="ntp">NTP</option>
+<option value="smtp">SMPT</option>
+<option value="ssh">SSH</option>
+<option value="tcp">TCP</option>
+</select>
+</td><td>
+<input name="r1h" type="text" id="idr1h" size="30" maxlength="64"/>
+</td><td>
+<input name="r1p" type="text" id="idr1p" size="5" maxlength="5"/>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td colspan="5">&nbsp;</td>
+</tr><tr>
+<td colspan="5" align="center">
+<button type="button" onclick="addMonitor()">Add Monitor</button>
+<button type="button" onclick="delMonitor()">Delete Monitor</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="3">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

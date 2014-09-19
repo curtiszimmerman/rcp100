@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting acl"  >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGACL+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcpacld
+else
+	/opt/rcp/bin/rcpacld
+fi

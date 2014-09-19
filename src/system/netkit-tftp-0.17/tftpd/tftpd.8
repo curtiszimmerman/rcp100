@@ -1,0 +1,121 @@
+.\" Copyright (c) 1983, 1991 The Regents of the University of California.
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. All advertising materials mentioning features or use of this software
+.\"    must display the following acknowledgement:
+.\"	This product includes software developed by the University of
+.\"	California, Berkeley and its contributors.
+.\" 4. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"	from: @(#)tftpd.8	6.7 (Berkeley) 5/13/91
+.\"	$Id: tftpd.8,v 1.14 2000/07/30 23:57:10 dholland Exp $
+.\"
+.Dd July 29, 2000
+.Dt TFTPD 8
+.Os "Linux NetKit (0.17)"
+.Sh NAME
+.Nm tftpd
+.Nd
+.Tn DARPA
+Trivial File Transfer Protocol server
+.Sh SYNOPSIS
+.Nm tftpd
+.Op Ar directory ...
+.Sh DESCRIPTION
+.Nm Tftpd
+is a server which supports the
+.Tn DARPA
+Trivial File Transfer
+Protocol.
+The
+.Tn TFTP
+server operates
+at the port indicated in the
+.Ql tftp
+service description;
+see
+.Xr services 5 .
+The server is normally started by
+.Xr inetd 8 .
+.Pp
+The use of
+.Xr tftp 1
+does not require an account or password on the remote system.
+Due to the lack of authentication information, 
+.Nm tftpd
+will allow only publicly readable files to be
+accessed.
+Files may be written only if they already exist and are publicly writable.
+Note that this extends the concept of
+.Dq public
+to include
+all users on all hosts that can be reached through the network;
+this may not be appropriate on all systems, and its implications
+should be considered before enabling tftp service.
+The server should have the user ID with the lowest possible privilege.
+.Pp
+Access to files may be controlled by invoking
+.Nm tftpd
+with a list of directories by including pathnames
+as server program arguments in
+.Pa /etc/inetd.conf .
+In this case access is restricted to files whose names are prefixed by
+the one of the given directories. If no directories are supplied the
+default is
+.Pa /tftpboot .
+To give out access to the whole filesystem, should this be desired for
+some reason, supply 
+.Pa / 
+as an argument.
+.Pp
+Unfortunately, on multi-homed systems, it is impossible for
+.Nm tftpd
+to determine the address on which a packet was received. As a result,
+.Nm tftpd
+uses two different mechanisms to guess the best source address to use
+for replies. If the socket that
+.Xr inetd 8
+passed to
+.Nm tftpd
+is bound to a particular address,
+.Nm tftpd
+uses that address for replies. Otherwise,
+.Nm tftpd
+uses ``UDP connect'' to let the kernel choose the reply address based
+on the destination of the replies and the routing tables. This means
+that most setups will work transparently, while in cases where the
+reply address must be fixed, the virtual hosting feature of
+.Xr inetd 8
+can be used to ensure that replies go out from the correct address.
+These considerations are important, because most tftp clients will
+reject reply packets that appear to come from an unexpected address.
+.Sh SEE ALSO
+.Xr tftp 1 ,
+.Xr inetd 8
+.Sh HISTORY
+The
+.Nm
+command appeared in
+.Bx 4.2 .

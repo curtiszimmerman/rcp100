@@ -1,0 +1,98 @@
+rcp100 (1.0) baseline; urgency=low
+
+  * HTTP configurator enhancements.
+  * MAC address filtering.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Thu, 19 Dec 2013 08:00:00 -0500
+
+rcp100 (0.99.6) baseline; urgency=low
+
+  * Merged LiveCD support from RCPlive project.
+  * VLAN interface support.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Thu, 23 Oct 2013 11:15:20 -0500
+
+rcp100 (0.99.5) baseline; urgency=low
+
+  * DHCP static leases.
+  * Firewall port forwarding.
+  * bugfixes
+
+ -- RCP Team <rcpteam@yahoo.com>  Thu, 26 Sep 2013 07:20:27 -0500
+
+rcp100 (0.99.4) baseline; urgency=low
+
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Sat, 15 Jun 2013 07:31:27 -0500
+
+rcp100 (0.99.3) baseline; urgency=low
+
+  * DHCP server.
+  * Login banner support.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Sun, 12 May 2013 09:00:07 -0500
+
+rcp100 (0.99.2) baseline; urgency=low
+
+  * SNMP logging (RFC 5676).
+  * SNMP statistics.
+  * HTTP configuration.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Sun, 10 Feb 2013 09:14:57 -0500
+
+rcp100 (0.99.1) baseline; urgency=low
+
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Tue, 15 Jan 2013 10:22:05 -0500
+
+rcp100 (0.99) baseline; urgency=low
+
+  * RIP/OSPF route redistribution.
+  * OSPF SNMP traps.
+  * DNS proxy security enhancements.
+  * Network monitoring features.
+  * HTTP interface.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Wed, 02 Jan 2013 13:45:25 -0500
+
+rcp100 (0.98.3) baseline; urgency=low
+
+  * ACL ICMP support.
+  * OSPF MTU support.
+  * OSPF passive interface.
+  * OSPF LSA summarization.
+  * OSPF show commands.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Sat, 10 Nov 2012 11:14:12 -0500
+
+rcp100 (0.98.2) baseline; urgency=low - October 2012
+
+  * Bugfix release including OSPF, route redistribution, loopback interface and DNS fixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Mon, 01 Oct 2012 09:34:32 -0500
+
+rcp100 (0.98.1) baseline; urgency=low
+
+  * SNMP v1, v2c, v3.
+  * loopback interfaces.
+  * redistribution of loopback addresses into RIP and OSPF.
+  * Equal Cost Multipath support for RIP and OSPF.
+  * ACL enhancements.
+  * Masquerade NAT.
+  * bugfixes.
+
+ -- RCP Team <rcpteam@yahoo.com>  Sat, 08 Sept 2012 09:33:20 -0500
+
+rcp100 (0.98) baseline; urgency=low
+
+  * First beta release.
+
+ -- RCP Team <rcpteam@yahoo.com>  Fri, 03 Aug 2012 10:24:09 -0500

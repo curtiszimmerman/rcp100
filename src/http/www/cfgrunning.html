@@ -1,0 +1,43 @@
+<!DOCTYPE html><html>
+<head><title>Running Configuration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+/* rest api */
+function runCmd() {
+	// build command string
+	command = "show running-config"
+	retval = rest(command, localStorage.secret);
+}
+</script>
+</head>
+
+<body OnLoad="runCmd();">
+<div id="page"><br/>
+<form name="myform" method="post" action="javascript:runCmd()">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>Running Configuration</h2><br/></td>
+</tr>
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="runCmd()">Run Command</button>
+</td></tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

@@ -1,0 +1,171 @@
+<!DOCTYPE html><html>
+<head><title>NTP</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var cmd = "no ntp server && ";
+	if (idr2p.value.length) {
+		if (checkHostname(idr2p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 1");
+			return;
+		}
+		cmd += "ntp server " + idr2p.value + " && "
+	}
+	if (idr3p.value.length) {
+		if (checkHostname(idr3p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 2");
+			return;
+		}
+		cmd += "ntp server " + idr3p.value + " && ";
+	}
+	if (idr4p.value.length) {
+		if (checkHostname(idr4p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 3");
+			return;
+		}
+		cmd += "ntp server " + idr4p.value + " && ";
+	}
+	if (idr5p.value.length) {
+		if (checkHostname(idr5p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 4");
+			return;
+		}
+		cmd += "ntp server " + idr5p.value + " && "
+	}
+	if (idr6p.value.length) {
+		if (checkHostname(idr6p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 5");
+			return;
+		}
+		cmd += "ntp server " + idr6p.value + " && ";
+	}
+	if (idr7p.value.length) {
+		if (checkHostname(idr7p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 6");
+			return;
+		}
+		cmd += "ntp server " + idr7p.value + " && ";
+	}
+	if (idr8p.value.length) {
+		if (checkHostname(idr8p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 7");
+			return;
+		}
+		cmd += "ntp server " + idr8p.value + " && ";
+	}
+	if (idr9p.value.length) {
+		if (checkHostname(idr9p.value) == 0) {
+			printError("Error: invalid hostname or IP address for server 9");
+			return;
+		}
+		cmd += "ntp server " + idr9p.value + " && ";
+	}
+	
+	if (idr1.value == "enabled")
+		cmd += "ip ntp server";
+	else
+		cmd += "no ip ntp server";
+	
+	cmd += " && copy run start";
+	restCmd(cmd);
+}
+
+function showConfig() {
+	var cmd = "show configuration ntp";
+	restCmd(cmd);
+}
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>NTP Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><b>Servers</b> (hostname or IP address)</td>
+<td></td><td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r2p" type="text" id="idr2p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td><input name="r3p" type="text" id="idr3p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r4p" type="text" id="idr4p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td><input name="r5p" type="text" id="idr5p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r6p" type="text" id="idr6p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td><input name="r7p" type="text" id="idr7p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><input name="r8p" type="text" id="idr8p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td><input name="r9p" type="text" id="idr9p" size="30" maxlength="64" value="<?rcps ntph_get>"/></td>
+<td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Local NTP server</td>
+<td>
+<select name="status" id="idr1">
+<option value="enabled" <?rcps ntps_enabled>>enabled</option>
+<option value="disabled"<?rcps ntps_disabled>>disabled</option>
+</select></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+<tr>
+<td colspan="5">&nbsp;</td>
+</tr><tr>
+<td colspan="5" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="3">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

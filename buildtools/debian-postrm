@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+if [ "$1" = purge ] ; then
+	rm -fr /opt/rcp
+fi
+exit 0

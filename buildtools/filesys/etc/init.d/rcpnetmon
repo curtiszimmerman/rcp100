@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting network monitor" >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGNETMON+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcpnetmond
+else
+	/opt/rcp/bin/rcpnetmond
+fi

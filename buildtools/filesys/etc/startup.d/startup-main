@@ -1,0 +1,100 @@
+#!/bin/bash
+
+DATE=`date`
+
+#******************************************************
+# stop an already running system
+#******************************************************
+if [ -f /dev/shm/rcp ]
+then
+	/opt/rcp/bin/stop.sh
+	sleep 2
+fi
+
+#******************************************************
+# create rcp user account
+#******************************************************
+echo "INIT: $DATE: init user account"
+/usr/sbin/useradd -d/home/rcp -s/bin/false rcp
+/usr/sbin/groupadd rcp
+echo "rcp:rcp" | /usr/sbin/chpasswd
+mkdir -p /home/rcp/tftpboot
+echo "12345" > /home/rcp/tftpboot/testfile
+mkdir -p /home/rcp/.ssh
+chmod 700 /home/rcp/.ssh
+rm -f /home/rcp/.ssh/authorized_keys
+chown rcp:rcp `find /home/rcp`
+
+
+#******************************************************
+# initialize transport directory
+#******************************************************
+echo "INIT: $DATE: mount transport directory"
+mkdir -p /opt/rcp/var/transport
+chown rcp:rcp  /opt/rcp/var/transport
+chmod 644  /opt/rcp/var/transport
+mount -t tmpfs -o size=10m tmpfs /opt/rcp/var/transport
+cp /opt/rcp/var/www/* /opt/rcp/var/transport
+chown rcp:rcp /opt/rcp/var/transport/*
+
+#******************************************************
+# detect existing services
+#******************************************************
+# detect dns proxy
+#netstat -tulpn | grep udp | grep ":53$"
+lsof -i 4UDP:53 -n -P
+if [ "$?" -eq 0 ];
+then
+	echo
+	echo "Warning: an external DNS proxy is already running on the system, RCP DNS proxy will be disabled."
+	echo
+	touch /opt/rcp/var/log/dnsproxy_at_startup
+else
+	rm -f /opt/rcp/var/log/dnsproxy_at_startup
+fi
+
+# detect dhcp server/relay
+#netstat -tulpn | grep udp | grep ":67$"
+lsof -i 4UDP:67 -n -P
+if [ "$?" -eq 0 ];
+then
+	echo
+	echo "Warning: an external DHCP server or relay is already running on the system."
+	echo
+	touch /opt/rcp/var/log/dhcp_at_startup
+else
+	rm -f /opt/rcp/var/log/dhcp_at_startup
+fi
+
+# detect tenet server
+lsof -i 4TCP:23 -n -P
+if [ "$?" -eq 0 ];
+then
+	echo
+	echo "Warning: an external telnet server is already running on the system."
+	echo
+fi
+
+# detect ntp daemon
+lsof -i 4UDP:123 -n -P
+if [ "$?" -eq 0 ];
+then
+	echo
+	echo "Warning: an external NTP daemon is already running on the system."
+	echo
+fi
+
+
+
+
+# enable ip forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+
+#******************************************************
+# initialize system
+#******************************************************
+echo "INIT: $DATE: setting up system defaults"
+/opt/rcp/bin/rcpservicesd --defaults
+sleep 1
+

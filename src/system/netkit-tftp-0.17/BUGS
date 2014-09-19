@@ -1,0 +1,2 @@
+When tftp checks incoming packets for being from the right IP address,
+it needs to check them against _all_ listed addresses for the server.

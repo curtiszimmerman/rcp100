@@ -1,0 +1,106 @@
+M:CLIMODE_CONFIG
+C:interface ethernet <interface>:cliInterfaceEthernetCmd
+C:interface loopback <interface>:cliInterfaceLoopbackCmd
+C:interface loopback <i,0,15>:cliInterfaceUserLoopbackCmd
+C:no interface loopback <i,0,15>:cliNoInterfaceUserLoopbackCmd
+C:interface bridge <interface>:cliInterfaceBridgeCmd
+C:interface vlan <s,1,15>:cliInterfaceVlanCmd
+C:interface vlan <s,1,15> id <u,1,4094> <interface2>:cliInterfaceVlanCmd
+C:no interface ethernet <interface>:cliNoInterfaceCmd
+C:no interface bridge <interface>:cliNoInterfaceCmd
+C:no interface vlan <interface>:cliNoInterfaceVlanCmd
+
+H:ethernet:Select Ethernet interface
+H:loopback:Select loopback interface
+H:bridge:Select bridge interface
+H:vlan:Select VLAN interface
+H:<s,1,15>:VLAN interface name
+H:<interface>:Interface name
+H:interface:Select interface
+H:<i,0,15>:Virtual loopback interface number
+H:id:VLAN id
+H:<u,1,4094>:VLAN id
+H:<interface2>:Parent interface
+
+#*******************************************
+# interface address
+#*******************************************
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE | CLIMODE_INTERFACE_VLAN
+C:ip address <ip> <mask>:cliIpAddressCmd
+C:ip address <cidr>:cliIpAddressCidrCmd
+C:no ip address:cliNoIpAddressCmd
+H:ip:IP configuration
+H:address:Set the IP address
+H:<ip>:IP address
+H:<mask>:IP subnet mask
+H:<cidr>:IP address and prefix length
+
+M:CLIMODE_INTERFACE_LOOPBACK
+C:ip address <cidrloopback>:cliIpAddressCidrCmd
+C:no ip address:cliNoIpAddressCmd
+H:<cidrloopback>:IP address and prefix length
+
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE | CLIMODE_INTERFACE_VLAN
+C:shutdown:cliShutdownCmd
+C:no shutdown:cliNoShutdownCmd
+C:ip mtu <i,1000,1500>:cliMtuCmd
+H:<i,1000,1500>:MTU value
+H:shutdown:Shutdown the interface
+
+M:CLIMODE_INTERFACE_LOOPBACK
+C:ip mtu <i,1000,16436>:cliMtuCmd
+H:<i,1000,16436>:MTU value
+
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_LOOPBACK | CLIMODE_INTERFACE_BRIDGE | CLIMODE_INTERFACE_VLAN
+C:no ip mtu:cliNoMtuCmd
+H:mtu:Maximum transmission unit
+
+
+#*******************************************
+# ARP
+#*******************************************
+M:CLIMODE_CONFIG
+C:arp <ip> <mac>:cliArpCmd
+C:no arp <ip>:cliNoArpCmd
+C:no arp all:cliNoArpAll
+
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE
+C:[no] ip proxy-arp:cliIpProxyArp
+
+M:CLIMODE_ALL_ENABLE
+C:clear arp-cache:cliArpClearCmd
+
+H:arp:Address Resolution Protocol
+H:<ip>:IP address of the ARP entry
+H:<mac>:MAC address
+H:clear:Delete dynamic information
+H:arp-cache:ARP cache information
+H:proxy-arp:Configure proxy ARP
+H:all:Delete all static ARP entries
+
+#*******************************************
+# Routes
+#*******************************************
+M:CLIMODE_CONFIG
+C:ip route <cidrnet>  <ipnexthop> <i,1,255>:cliIpRouteCidrCmd
+C:ip route <cidrnet>  <ipnexthop>:cliIpRouteCidrCmd
+C:no ip route <cidrnet> <ipnexthop>:cliNoIpRouteCidrCmd
+C:no ip route all:cliNoIpRouteAll
+C:ip default-gateway <ip>:cliIpDefaultGwCmd
+C:no ip default-gateway <ip>:cliNoIpDefaultGwCmd
+C:ip route <cidrnet> blackhole:cliIpRouteBlackhole
+C:no ip route <cidrnet> blackhole:cliNoIpRouteBlackhole
+
+H:ip:IP configuration
+H:route:IP static route configuration
+H:<ip>:IP address
+H:<mask>:IP subnet mask
+H:<cidrnet>:IP address and prefix length
+H:<ipnexthop>:IP next-hop address
+H:default-gateway:Configure default gateway
+H:no:Negate a command or set its defaults
+H:<i,1,255>:Administrative distance
+H:all:Delete all static routes
+H:blackhole:Blackhole route
+
+

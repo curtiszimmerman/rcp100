@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting ospf" >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGOSPF+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcpospfd
+else
+	/opt/rcp/bin/rcpospfd
+fi

@@ -1,0 +1,345 @@
+# M:mode
+# C: command:function call
+# H:help string
+
+#*******************************************************************
+# administrators
+#*******************************************************************
+# This is the first command inserted in the tree. It has to be the show command!!!
+M:CLIMODE_ALL
+C:show administrators:cliShowAdministratorsCmd
+
+M:CLIMODE_CONFIG
+C:administrator <administrator> password <password>:cliAdminPasswdCmd
+C:administrator <administrator> encrypted password <password>:cliAdminEncPasswdCmd
+C:no administrator <administrator>:cliNoAdminCmd
+
+H:show:Show running system information
+H:administrators:Administrators
+H:administrator:Configure administrators
+# size given by CLI_MAX_ADMIN_NAME
+H:<administrator>:Administrator account name
+H:password:Administrator password
+H:<password>:Password
+H:encrypted:Encrypted password
+
+
+#*******************************************************************
+# DNS
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:hostname <hostname>:cliSetHostnameCmd
+C:no hostname:cliNoSetHostnameCmd
+C:ip domain-name <domain>:cliIpDomainNameCmd
+C:no ip domain-name:cliIpDomainNameCmd
+C:ip name-server <ip>:cliIpNameServerCmd
+C:no ip name-server <ip>:cliNoIpNameServerCmd
+C:no ip name-server:cliNoIpNameServerAll
+C:ip host <domain> <ip>:cliIpHostNameCmd
+C:no ip host <domain>:cliNoIpHostNameCmd
+C:no ip host:cliNoIpHostNameAll
+
+H:no:Negate a command or set its defaults
+H:hostname:Assign hostname
+H:<hostname>:Hostname
+H:domain-name:DNS domain
+H:<domain>:Name
+H:<ip>:IP address
+H:host:Host
+H:name-server:DNS server
+
+
+#*******************************************************************
+# General commands
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:enable encrypted password <password>:cliSetEnableEncryptedPasswordCmd
+C:enable password <password>:cliSetEnablePasswordCmd
+C:no enable password:cliNoSetEnablePasswordCmd
+
+M:CLIMODE_ALL_ENABLE
+C:exec-timeout <i,0,99999> [<i,0,59>]:cliExecTimeout
+C:no exec-timeout:cliExecTimeout
+
+H:no:Negate a command or set its defaults
+H:encrypted:Encrypted password
+H:password:Administration password
+H:<password>:Password
+H:enable:Administration mode
+H:exec-timeout:CLI session idle timeout
+H:<i,0,99999>:Idle timeout minutes
+H:<i,0,59>:Idle timeout seconds
+
+#*******************************************************************
+# logging commands
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:logging <i,0,7>:cliLoggingCmd
+C:no logging:cliLoggingCmd
+C:logging emergencies:cliLoggingCmd
+C:logging alerts:cliLoggingCmd
+C:logging critical:cliLoggingCmd
+C:logging errors:cliLoggingCmd
+C:logging warnings:cliLoggingCmd
+C:logging notifications:cliLoggingCmd
+C:logging informational:cliLoggingCmd
+C:logging debugging:cliLoggingCmd
+
+C:no logging debugging:cliLoggingFacilityCmd
+C:[no] logging debugging all:cliLoggingFacilityCmd
+C:[no] logging debugging configuration:cliLoggingFacilityCmd
+C:[no] logging debugging interface:cliLoggingFacilityCmd
+C:[no] logging debugging router:cliLoggingFacilityCmd
+C:[no] logging debugging admin:cliLoggingFacilityCmd
+C:[no] logging debugging syscfg:cliLoggingFacilityCmd
+C:[no] logging debugging dhcp:cliLoggingFacilityCmd
+C:[no] logging debugging dns:cliLoggingFacilityCmd
+C:[no] logging debugging rip:cliLoggingFacilityCmd
+C:[no] logging debugging ipc:cliLoggingFacilityCmd
+C:[no] logging debugging ntp:cliLoggingFacilityCmd
+C:[no] logging debugging monitor:cliLoggingFacilityCmd
+C:[no] logging debugging ospf packets:cliLoggingFacilityCmd
+C:[no] logging debugging ospf drbdr:cliLoggingFacilityCmd
+C:[no] logging debugging ospf lsa:cliLoggingFacilityCmd
+C:[no] logging debugging ospf spf:cliLoggingFacilityCmd
+C:[no] logging debugging http:cliLoggingFacilityCmd
+
+C:no logging snmp:cliLoggingSnmpCmd
+C:[no] logging snmp all:cliLoggingSnmpCmd
+C:[no] logging snmp configuration:cliLoggingSnmpCmd
+C:[no] logging snmp interface:cliLoggingSnmpCmd
+C:[no] logging snmp router:cliLoggingSnmpCmd
+C:[no] logging snmp admin:cliLoggingSnmpCmd
+C:[no] logging snmp syscfg:cliLoggingSnmpCmd
+C:[no] logging snmp dhcp:cliLoggingSnmpCmd
+C:[no] logging snmp dns:cliLoggingSnmpCmd
+C:[no] logging snmp rip:cliLoggingSnmpCmd
+C:[no] logging snmp ipc:cliLoggingSnmpCmd
+C:[no] logging snmp ntp:cliLoggingSnmpCmd
+C:[no] logging snmp monitor:cliLoggingSnmpCmd
+C:[no] logging snmp ospf packets:cliLoggingSnmpCmd
+C:[no] logging snmp ospf drbdr:cliLoggingSnmpCmd
+C:[no] logging snmp ospf lsa:cliLoggingSnmpCmd
+C:[no] logging snmp ospf spf:cliLoggingSnmpCmd
+C:[no] logging snmp http:cliLoggingSnmpCmd
+
+C:logging rate-limit <i,10,1000>:cliLoggingRateCmd
+C:no logging rate-limit:cliLoggingRateCmd
+
+C:logging host  <ip> [port <port>]:cliLoggingHostCmd
+C:no logging host <ip>:cliLoggingHostCmd
+C:no logging host:cliNoLoggingHostAll
+
+M:CLIMODE_ALL
+C:show logging buffer [monitor]:cliShowLoggingBufferCmd
+C:show logging:cliShowLoggingCmd
+
+M:CLIMODE_ALL_ENABLE
+C:[no] terminal monitor:cliTerminalMonitorCmd
+C:clear logging buffer:cliClearLoggingCmd
+
+H:buffer:Logger buffer
+H:logging:Message logging facility
+H:<i,0,7>:Log severity level
+H:emergencies:Severity 0
+H:alerts:Severity 1
+H:critical:Severity 2
+H:errors:Severity 3
+H:warnings:Severity 4
+H:notifications:Severity 5
+H:informational:Severity 6
+H:debugging:Severity 7
+H:snmp:Simple Network Management Protocol
+H:all:All facilities
+H:configuration:Configuration facility logging
+H:interface:Interface facility logging
+H:router:Router facility logging
+H:admin:Administrators facility logging
+H:syscfg:System config facility logging
+H:dhcp:DHCP facility logging
+H:ntp:NTP facility logging
+H:monitor:Network Monitoring facility logging
+H:dns:DNS facility logging
+H:rip:RIP facility logging
+H:ospf:OSPF facility logging
+H:packets:packets
+H:drbdr:DR/BDR election
+H:lsa:LSA
+H:spf:SPF algorithm
+H:ipc:Inter-process communication
+H:rate-limit:Limit the number of messages per second
+H:<i,10,1000>:Maximum number of messages per second (default 100)
+H:terminal:Terminal function
+H:monitor:Monitor log
+H:clear:Delete dynamic information
+H:host:Set syslog server IP address
+H:<ip>:IP address
+H:port:Port number
+H:<port>:Port number
+
+#*******************************************************************
+# Services
+#*******************************************************************
+M:CLIMODE_CONFIG
+# tftp
+C:[no] service tftp:cliServiceTftpCmd
+C:service telnet:cliServiceTelnet
+C:[no] service telnet:cliServiceTelnet
+Q:This command will terminate all active Telnet sessions.
+C:service telnet port <i,1,65535>:cliServiceTelnetPort
+Q:This command will terminate all active Telnet sessions.
+C:no service telnet port:cliServiceTelnetPort
+Q:This command will terminate all active Telnet sessions.
+C:[no] service ftp:cliServiceFtp
+C:[no] service http:cliServiceHttp
+C:service http [port <i,1,65535>] [password <password>]:cliServiceHttpPassword
+C:service http [port <i,1,65535>] [encrypted password <password>]:cliServiceHttpPassword
+
+H:service:Enable management services
+H:no:Negate a command or set its defaults
+H:tftp:Trivial Transfer File Protocol services
+H:port:Port number
+H:<port>:Port number
+H:telnet:Telnet
+H:<i,1,65535>:Port number
+H:ftp:File Transfer Protocol
+H:http:Hypertext Transfer Protocol
+H:password:Enable HTTP configuration
+H:encrypted:Enable HTTP configuration
+H:<password>:Configuration password
+
+
+M:CLIMODE_ALL_ENABLE
+C:clear service statistics:cliClearServiceStats
+
+H:clear:Delete dynamic information
+H:service:Management services
+H:statistics:Statistics
+
+#*******************************************************************
+# NTP commands
+#*******************************************************************
+M:CLIMODE_CONFIG
+C:no ntp server:cliNoNtpServer
+C:[no] ntp server <ip>:cliNtpServerIp
+C:[no] ntp server <domain>:cliNtpServerHostname
+
+H:no:Negate a command or set its defaults
+H:ntp:Network Time Protocol
+H:server:NTP server
+H:<ip>:Server IP address
+H:<domain>:Server hostname
+
+C:[no] ip ntp server:cliIpNtpServer
+H:ip:Internet Protocol
+H:ntp:Enable NTP server
+H:server:Server
+
+M:CLIMODE_ALL
+C:show ntp associations:cliShowNtpAssociations
+C:show ntp status:cliShowNtpStatus
+
+H:show:Show running system information
+H:ntp:Network Time Protocol
+H:associations:NTP associations
+H:status:NTP status
+
+#*******************************************************************
+# Process handling
+#*******************************************************************
+M:CLIMODE_ALL_ENABLE
+C:restart process rcpdhcp:cliRestartProcess
+C:restart process rcpdns:cliRestartProcess
+C:restart process rcprip:cliRestartProcess
+C:restart process rcprouter:cliRestartProcess
+C:restart process ntpd:cliRestartProcess
+C:restart process rcpospf:cliRestartProcess
+C:restart process rcpnetmon:cliRestartProcess
+
+H:restart:Restart a service or a process
+H:process:Process
+H:rcpdhcp:DHCP relay process
+H:rcpdns:DNS proxy process
+H:rcprip:RIP process
+H:rcprouter:Router process
+H:ntpd:NTP process
+H:rcpospf:OSPF process
+H:rcpnetmon:Network Management process
+
+#*******************************************************************
+# Debugging
+#*******************************************************************
+M:CLIMODE_ALL
+C:debug mux:cliDebugMux
+C:debug log xinetd:cliDebugLog
+C:debug log router:cliDebugLog
+C:debug log restarts:cliDebugLog
+H:mux:Multiplexer
+H:log:Debug log
+H:xinetd:xinetd process
+H:router:rcprouter process
+H:restarts:Process restart log
+
+#*******************************************
+# SNMP
+#*******************************************
+M:CLIMODE_CONFIG
+S:{
+S:struct stat s;
+S:if (stat("/opt/rcp/sbin/snmpd", &s) == 0) {
+C:snmp-server community <snmp-community> ro:cliSnmpServerCommunity
+C:no snmp-server community:cliSnmpServerCommunity
+H:snmp-server:Enable SNMP server
+H:public:Public access
+H:community:Enable SNMP v1 and v2c
+H:<snmp-community>:Community password
+H:ro:Read-only
+
+C:snmp-server user <administrator> password <snmp-password> ro:cliSnmpServerUser
+C:no snmp-server user <administrator>:cliSnmpServerUser
+C:no snmp-server user:cliNoSnmpServerUserAll
+H:user:Enable SNMP v3
+H:<administrator>:User name
+H:password:Password
+H:<snmp-password>:Password
+H:ro:Read-only
+
+C:snmp-server contact <s,1,63>:cliSnmpServerContact
+C:no snmp-server contact:cliSnmpServerContact
+H:contact:Set contact information
+H:<s,1,63>:Contact string
+
+C:snmp-server location <s,1,63>:cliSnmpServerLocation
+C:no snmp-server location:cliSnmpServerLocation
+H:location:Set location information
+H:<s,1,63>:Location string
+S:} // if stat
+S:}
+
+S:{
+S:struct stat s;
+S:if (stat("/opt/rcp/bin/snmptrap", &s) == 0) {
+C:[no] snmp-server enable traps:cliSnmpServerEnableTraps
+C:snmp-server host <ip> traps version 2c <snmp-community>:cliSnmpServerHost
+C:snmp-server host <ip> informs version 2c <snmp-community>:cliSnmpServerHost
+C:no snmp-server host <ip>:cliSnmpServerHost
+C:no snmp-server host:cliNoSnmpServerHostAll
+H:enable:Enable SNMP notifications
+H:host:SNMP host
+H:<ip>:Host IP address
+H:traps:Send SNMP traps
+H:informs:Send SNMP informs
+H:version:SNMP version
+H:2c:Community-based SNMP version 2
+H:<snmp-community>:Community string
+S:} // if stat
+S:}
+
+M:CLIMODE_ALL
+S:{
+S:struct stat s;
+S:if (stat("/opt/rcp/sbin/snmpd", &s) == 0) {
+C:show snmp:cliShowSnmp
+H:snmp:Simple Network Management Protocol
+S:} // if stat
+S:}

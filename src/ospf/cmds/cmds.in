@@ -1,0 +1,221 @@
+#*******************************************
+# config
+#*******************************************
+M:CLIMODE_CONFIG
+C:no router ospf:cliNoRouterOspfCmd
+C:router ospf:cliRouterOspfCmd
+
+H:router:Routing protocol
+H:ospf:Open Shortest Path First
+
+#*******************************************
+# interface
+#*******************************************
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE | CLIMODE_INTERFACE_VLAN
+C:ip ospf cost <u,1,65535>:cliIpOspfCost
+C:no ip ospf cost:cliIpOspfCost
+H:ip:Internet Protocol
+H:ospf:Open Shortest Path First
+H:cost:Cost of sending a packet
+H:<u,1,65535>:Cost
+
+C:ip ospf priority <u,0,255>:cliIpOspfPriority
+C:no ip ospf priority:cliIpOspfPriority
+H:priority:Router priority
+H:<u,0,255>:Priority
+
+C:ip ospf hello-interval <u,1,65535>:cliIpOspfHello
+C:no ip ospf hello-interval:cliIpOspfHello
+H:hello-interval:Time between the hello packets sent
+H:<u,1,65535>:Seconds
+
+C:ip ospf dead-interval <u,1,65535>:cliIpOspfDead
+C:no ip ospf dead-interval:cliIpOspfDead
+H:dead-interval:Interval after which a neighbor is declared dead
+H:<u,1,65535>:Seconds
+
+C:ip ospf retransmit-interval <u,5,65535>:cliIpOspfRetransmit
+C:no ospf retransmit-interval:cliIpOspfRetransmit
+H:retransmit-interval:Time before LS Updates retransmissions
+H:<u,5,65535>:Seconds
+
+C:ip ospf authentication-key <ospf-password>:cliIpOsfpAuthenticationKey
+C:no ip ospf authentication-key:cliIpOsfpAuthenticationKey
+C:ip ospf message-digest-key <u,0,255> md5 <ospf-md5-password>:cliIpOsfpMd5AuthenticationKey
+C:no ip ospf message-digest-key:cliIpOsfpMd5AuthenticationKey
+C:ip ospf authentication [message-digest]:cliIpOspfAuthentication
+C:no ip ospf authentication:cliIpOspfAuthentication
+
+H:authentication-key:Password for OSPF simple password authentication
+H:message-digest-key:Password for OSPF MD5 authentication
+H:authentication:Enable OSPF authentication.
+H:message-digest:Enable OSPF MD5 authentication.
+H:<ospf-password>:OSPF password
+H:<ospf-md5-password>:OSPF password
+H:<u,0,255>:MD5 key identifier
+H:md5:MD5
+
+C:[no] ip ospf mtu-ignore:cliIpOsfpMtuIgnore
+H:mtu-ignore:Ignore MTU field in Database Descriptor (DBD) packets
+
+#*******************************************
+# ospf mode
+#*******************************************
+M:CLIMODE_OSPF
+C:router-id <ip>:cliRouterId
+H:router-id:OSPF router ID
+H:<ip>:IP address
+
+C:network <cidrnet> area <u,0,4294967295>:cliNetworkCmd
+C:no network <cidrnet> area <u,0,4294967295>:cliNetworkCmd
+C:no network:cliNoNetworkAllCmd
+H:network:Network
+H:<cidrnet>:IP address and prefix length
+H:area:Set the OSPF area ID
+H:<u,0,4294967295>:OSPF area ID
+
+C:timers spf <u,1,600> [<u,1,300>]:cliTimersSpf
+C:no timers spf:cliTimersSpf
+H:timers:Timers
+H:spf:Delay before starting route calculation
+H:<u,1,600>:Delay before starting route calculation in seconds
+H:<u,1,300>:Hold time after route calculation in seconds
+
+C:ospf log-adjacency-changes [detail]:cliOspfLogAdjacency
+C:no ospf log-adjacency-changes:cliOspfLogAdjacency
+H:ospf:Open Shortest Path First
+H:log-adjacency-changes:Log OSPF neighbor's state changes
+H:detail:Send log messages for any change in OSPF neighbor state
+
+C:area <u,0,4294967295> stub [no-summary]:cliAreaStub
+C:no area <u,0,4294967295> stub:cliAreaStub
+C:area <u,0,4294967295> default-cost  <u,0,16777214>:cliAreaDefaultCost
+C:no area <u,0,4294967295> default-cost:cliAreaDefaultCost
+H:area:OSPF area
+H:<u,0,4294967295>:OSPF area ID
+H:stub:Define a stub area.
+H:no-summary:No summary LSA
+H:default-cost:Assign a specific cost to the default summary route used for the stub area.
+H:<u,0,16777214>:Cost
+
+C:area <u,0,4294967295> range <cidrnet>[not-advertise]:cliRangeCmd
+C:no area <u,0,4294967295> range <cidrnet>:cliRangeCmd
+H:area:OSPF area
+H:<u,0,4294967295>:OSPF area ID
+H:range:Specify an address range for summarization
+H:<cidrnet>:Address range
+H:not-advertise:Suppress redistribution of the summary route
+
+C:summary-address <cidrnet> [not-advertise]:cliSummaryAddressCmd
+C:no summary-address <cidrnet>:cliSummaryAddressCmd
+H:summary-address:Summarize external routes
+H:<cidrnet>:IP address summaries
+H:not-advertise:Suppress redistribution of the summary route
+
+C:[no] discard-route:cliDiscardRoute
+C:[no] discard-route external:cliDiscardRouteExternal
+C:[no] discard-route internal:cliDiscardRouteInternal
+H:discard-route:Install discard-route entries for summarized routes
+H:external:Redistributed summarized routes on ASBR
+H:internal:Summarized internal routes on ABR
+
+C:[no] default-information originate:cliRedistDefaultInformationCmd
+C:redistribute static [metric <u,0,16777214>] [metric-type <i,1,2>] [tag <u,0,4294967295>]:cliRedistStaticCmd
+C:no redistribute static:cliRedistStaticCmd
+C:redistribute connected [metric <u,0,16777214>] [metric-type <i,1,2>] [tag <u,0,4294967295>]:cliRedistConnectedCmd
+C:no redistribute connected:cliRedistConnectedCmd
+C:[no] redistribute connected loopback:cliRedistConnectedSubnetsCmd
+C:redistribute rip [metric <u,0,16777214>] [metric-type <i,1,2>] [tag <u,0,4294967295>]:cliRedistRipCmd
+C:no redistribute rip:cliRedistRipCmd
+H:default-information:Insert a default route into OSPF routing domain
+H:originate:Distribute a default route
+H:redistribute:Redistribute routes from a different protocol
+H:static:Static routes
+H:rip:RIP routes
+H:metric:Default metric
+H:<u,0,16777214>:Metric value
+H:metric-type:Metric type
+H:<i,1,2>:OSPF External Type 1 or OSPF External Type 2
+H:tag:Route tag
+H:<u,0,4294967295>:Tag value
+H:connected:Connected routes
+H:loopback:Virtual loopback interface addresses
+
+C:[no] passive-interface <interface>:cliPassiveInterfaceCmd
+H:passive-interface:Passive interface
+H:<interface>:Interface name
+
+#*******************************************
+# all modes
+#*******************************************
+M:CLIMODE_ALL
+C:show ip ospf:cliShowIpOspfCmd
+C:show ip ospf process:cliShowIpOspfProcessCmd
+C:show ip ospf neighbor:cliShowIpOspfNeighborCmd
+C:show ip ospf database [detail]:cliShowIpOspfDatabaseCmd
+C:show ip ospf <u,0,4294967295> database [detail]:cliShowIpOspfAreaDatabaseCmd
+
+C:show ip ospf database network [detail]:cliShowIpOspfDatabaseNetworkCmd
+C:show ip ospf <u,0,4294967295> database network [detail]:cliShowIpOspfAreaDatabaseNetworkCmd
+C:show ip ospf database router [detail]:cliShowIpOspfDatabaseRouterCmd
+C:show ip ospf <u,0,4294967295> database router [detail]:cliShowIpOspfAreaDatabaseRouterCmd
+C:show ip ospf database summary [detail]:cliShowIpOspfDatabaseSummaryCmd
+C:show ip ospf <u,0,4294967295> database summary [detail]:cliShowIpOspfAreaDatabaseSummaryCmd
+C:show ip ospf database asbr-summary [detail]:cliShowIpOspfDatabaseAsbrSummaryCmd
+C:show ip ospf <u,0,4294967295> database asbr-summary [detail]:cliShowIpOspfAreaDatabaseAsbrSummaryCmd
+C:show ip ospf database self-originate:cliShowIpOspfDatabaseSelfOriginateCmd
+C:show ip ospf <u,0,4294967295> database self-originate:cliShowIpOspfAreaDatabaseSelfOriginateCmd
+
+C:show ip ospf database external:cliShowIpOspfDatabaseExternalCmd
+C:show ip ospf database external detail:cliShowIpOspfDatabaseExternalDetailCmd
+C:show ip ospf database external brief:cliShowIpOspfDatabaseExternalBriefCmd
+C:show ip ospf route [ecmp]:cliShowIpOspfRouteCmd
+C:show ip ospf interface:cliShowIpOspfInterfaceCmd
+C:show ip ospf border-routers:cliShowIpOspfBorderRoutersCmd
+
+H:border-routers:ABR and ASBR information
+H:show:Show running system information
+H:ip:IP information
+H:ospf:Open Shortest Path First
+H:database:OSPF database
+H:neighbor:Neighbors
+H:route:OSPF routing table
+H:ecmp:Equal Cost Multipath routes
+H:detail:Detailed OSPF database information
+H:interface:Interface information
+H:external:AS External Link States
+H:brief:LSA count for each advertising router
+H:<u,0,4294967295>:OSPF area ID
+H:network:Network Link States
+H:router:Router Link States
+H:self-originate:Local router self-originated Link States
+H:summary:Summary Link States
+H:asbr-summary:ASBR-Summary Link States
+H:process:OSPF process statistics
+
+M:CLIMODE_ALL_ENABLE
+C:clear ip ospf:cliClearIpOspfCmd
+C:clear ip ospf force-spf:cliClearIpOspfForceSpf
+C:clear ip ospf statistics:cliClearIpOspfStatistics
+
+H:clear:Delete dynamic information
+H:ip:Internet Protocol
+H:ospf:Open Shortest Path First
+H:force-spf:Trigger an SPF calculation
+H:statistics:OSPF statistics
+
+C:debug ospf shutdown:cliDebugOspfShutdown
+C:debug ospf route:cliDebugRoutePrint
+C:debug ospf lost-dd:cliDebugLostDD
+C:debug ospf lost-lsu:cliDebugLostLSAUpdate
+C:debug ospf lost-lsrq:cliDebugLostLSAReq
+C:debug ospf lost-lsack:cliDebugLostLSAAck
+H:debug:Modify debugging parameters
+H:ospf:OSPF
+H:shutdown:Shutdown OSPF process
+H:route:OSPF routing table
+H:lost-dd:Lost DD packets
+H:lost-lsu:Lost LSUpdate packets
+H:lost-lsrq:Lost LSRequest packets
+H:lost-lsack:Lost LSAck packets
+

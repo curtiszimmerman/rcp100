@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DATE=`date`
+echo "INIT: $DATE: starting ntpd" >> /opt/rcp/var/log/restart
+while [ 1 ]
+do	
+	/opt/rcp/sbin/ntpd -d -s
+
+	/opt/rcp/bin/rcplog 6 "ntpd process terminated, restarting"
+	DATE=`date`
+	echo "$DATE: ntpd process terminated, restarting" >> /opt/rcp/var/log/restart
+	sleep 5
+done

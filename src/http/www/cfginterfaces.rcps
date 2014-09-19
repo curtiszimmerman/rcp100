@@ -1,0 +1,182 @@
+<!DOCTYPE html><html>
+<head><title>Interfaces</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var rootnode=document.getElementById("myform")
+	var walker=document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT, null, false)
+
+	var cmd = "";
+	var ifname = "";
+	var iftype = "";
+	var ifaddr = "";
+	var ifmask = "";
+	var ifmtu = "";
+	while (walker.nextNode()) {
+		if (walker.currentNode.tagName == "INPUT") {
+			if (walker.currentNode.className == "ifname") {
+				id = walker.currentNode.getAttribute("id");
+				elem =  document.getElementById(id).value;
+				if (elem != ifname) {
+					ifname = elem;
+					iftype = "";
+					ifaddr = "";
+					ifmask = "";
+					ifmtu = "";
+				}
+			}
+			if (walker.currentNode.className == "iftype") {
+				id = walker.currentNode.getAttribute("id");
+				iftype =  document.getElementById(id).value;
+			}
+			if (walker.currentNode.className == "addr") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkIp(elem))
+						ifaddr =  elem;
+					else {
+						printError("Error: invalid IP address for interface " + ifname + "<br/>");
+						return;
+					}
+				}
+				else
+					ifaddr = "";
+			}
+			if (walker.currentNode.className == "mask") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkMask(elem))
+						ifmask =  elem;
+					else {
+						printError("Error: invalid mask for interface " + ifname + "<br/>");
+						return;
+					}
+				}
+				else
+					ifmask = "";
+				
+				if (ifaddr.length != 0 && ifmask.length == 0) {
+					printError("Error: please provide both the IP address and the mask for interface " + ifname + "<br/>");
+					return;
+				}
+				if (ifaddr.length == 0 && ifmask.length != 0) {
+					printError("Error: please provide both the IP address and the mask for interface " + ifname + "<br/>");
+					return;
+				}
+			}
+			if (walker.currentNode.className == "mtu") {
+				id = walker.currentNode.getAttribute("id");
+
+				elem = document.getElementById(id).value;
+				if (iftype != "loopback") {
+					if (elem.length) {
+						if (checkMtu(elem))
+							ifmtu =  elem;
+						else {
+							printError("Error: invalid MTU for interface " + ifname + "<br/>");
+							addError("A value between 1000 and 1500 is expected");
+							return;
+						}
+					}
+					else
+						ifmtu = "";
+				}
+				else
+					ifmtu =  document.getElementById(id).value;
+				
+				if (iftype == "loopback") {
+					cmd += "interface " + iftype + " " + ifname + " && ";
+					if (ifaddr.length && ifmask.length)
+						cmd += "ip address " + ifaddr + "/" + ifmask + " && ";
+					else
+						cmd += "no ip address && ";
+					if(ifmtu.length)
+						cmd += "ip mtu " + ifmtu + " && exit && ";
+					else
+						cmd += "no ip mtu"
+				}
+					
+			}
+			if (walker.currentNode.className == "shutdown") {
+				if (iftype != "loopback") {
+					id = walker.currentNode.getAttribute("id");
+					cmd += "interface " + iftype + " " + ifname + " && ";
+					if (ifaddr.length && ifmask.length)
+						cmd += "ip address " + ifaddr + "/" + ifmask + " && ";
+					else
+						cmd += "no ip address && ";
+					if(ifmtu.length)
+						cmd += "ip mtu " + ifmtu + " && ";
+					else
+						cmd += "no ip mtu"
+					if (document.getElementById(id).checked)
+						cmd += "shutdown " + " && exit && ";
+					else
+						cmd += "no shutdown " + " && exit && ";
+				}
+			}
+		}
+	}
+	
+	cmd += "copy run start";
+	restCmd(cmd);	
+}
+
+function showConfig() {
+	var cmd = "show configuration interfaces";
+	restCmd(cmd);
+}
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post" id="myform">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="5" align="center" ><br/><h2>Interface Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="5" align="center" ><br/></tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><b>Name&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
+<td><b>IP Address / Mask</b></td>
+<td><b>MTU</b></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<?rcps interfaces>
+
+<tr>
+<td colspan="5">&nbsp;</td>
+</tr><tr>
+<td colspan="5" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="5">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

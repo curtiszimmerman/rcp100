@@ -1,0 +1,133 @@
+<!DOCTYPE html><html>
+<head><title>HTTP Password</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+var sessionid = 0;
+var myVar=setInterval(function(){keepaliveTimer()},15000);
+
+function parseKeepalive(txt) {
+	obj = JSON.parse(txt);
+	return obj.keepalive;
+}
+
+function keepaliveTimer()
+{
+	// send the request
+	var req = "keepalive.json";
+	var xmlhttp;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+ 		xmlhttp=new XMLHttpRequest();
+	}
+	else {// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			sessionid = parseKeepalive(xmlhttp.responseText);
+		}
+	}
+	xmlhttp.open("GET",req,true);
+	xmlhttp.send();
+}
+/* end keepalive */
+
+/* rest api */
+function redirectOk() {
+	window.location = "index.html;" + sessionid;
+}
+
+function saveDoc() {
+	if (idp1.value != idp2.value) {
+		printError("Error: passwords not matching<br/>");
+		return;
+	}
+	if (!idp1.value) {
+		printError("Error: you must enter a password<br/>");
+		return;
+	}
+	if (!checkNumbersLetters(idp1.value)) {
+		printError("Error: invalid password, only letters and numbers are allowed<br/>");
+		return;
+	}
+	
+	// build command string
+	command = "administrator rcp password " + idp1.value + " && " + "service http password " + idp1.value
+		+ " && copy run start";
+	printresult = false;
+	retval = rest(command, "rcp");
+	
+	if (retval == "ok") {
+		redirectOk();
+	}
+	else {
+		document.getElementById("restResult").style.border = "2px solid";
+		document.getElementById("restResult").style.padding = "5px";
+		document.getElementById("restResult").innerHTML += "Failed to change passwords<br/>";
+	}
+}
+
+function redirectDoc() {
+	window.location = "index.html;" + sessionid;
+}
+
+/* send form if the user hits enter */
+document.onkeypress = enter;
+function enter(e){
+if (e.which == 13){saveDoc()}
+}
+
+
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.login.username.focus();keepaliveTimer()">
+<div id="page"><br/><form name="login" method="post" action="/login"><br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>Password Configuration</h2><br/></td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td colspan="2">The system uses a well known default password for <b>unprivileged access</b> and <b>configuration</b>.
+To improve the security of your network, you should change this password immediately.<br/><br/>
+Please enter a new password:<br/><br/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>New password&nbsp;</td>
+<td><input name="username" type="password" id="idp1" maxlength="128"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr><tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Retype password&nbsp;</td>
+<td><input name="password" type="password" id="idp2" maxlength="128"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr><tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="saveDoc()">Save Configuration</button>
+<button type="button" onclick="redirectDoc()">Remind me later</button>
+</td></tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

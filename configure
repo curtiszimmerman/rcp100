@@ -1,0 +1,377 @@
+#!/bin/bash
+#
+# Copyright (C) 2012-2013 RCP100 Team (rcpteam@yahoo.com)
+#
+# This file is part of RCP100 project
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+VERSION=1.0
+TOP=`pwd`
+WITH_SNMP="yes"
+WITH_NETMON="yes"
+WITH_DHCP="yes"
+WITH_RIP="yes"
+WITH_OSPF="yes"
+
+#**************************
+# parse command line
+#**************************
+configure_help () {
+	cat << END
+RCP version $VERSION
+Usage: ./configure [ OPTIONS]
+Options:
+	--without-dhcp: DHCP relay support not included
+	--without-netmon: Network Monitoring support not included
+	--without-ospf: OSPF support not included
+	--without-rip: RIP support not included
+	--without-snmp: SNMP support not included
+	--help: this help screen
+
+By default all features are included.
+
+END
+}
+
+while [ $# -gt 0 ]; do    # Until you run out of parameters . . .
+	case "$1" in
+	--without-dhcp)
+		WITH_DHCP="no"
+		;;
+	--without-ospf)
+		WITH_OSPF="no"
+		;;
+	--without-rip)
+		WITH_RIP="no"
+		;;
+	--without-snmp)
+		WITH_SNMP="no"
+		;;
+	--without-netmon)
+		WITH_NETMON="no"
+		;;
+	--help)
+		configure_help
+		exit 0
+		;;
+	esac
+	shift       # Check next set of parameters.
+done
+
+echo 
+echo 
+echo "***********************************"
+echo " testing build dependencies"
+echo "***********************************"
+if which rsync >/dev/null; then
+    echo rsync found
+else
+    echo Error: cannot find rsync, please install it.
+    exit 1
+fi
+
+echo 
+echo 
+echo "***********************************"
+echo " generate version.h"
+echo "***********************************"
+
+cat > version.h << EOF
+#ifndef RCP_VERSION_H
+#define RCP_VERSION_H
+#define RCP_VERSION "$VERSION"
+#define RCP_ENC_DISABLED
+#endif
+
+EOF
+
+
+#**************************
+# configure system
+#**************************
+export CFLAGS="-fstack-protector-all -O2 $CFLAGS"
+# build librcp.a, some programs use it and ./configure will fail
+echo 
+echo 
+echo "***********************************"
+echo " librcp compile test"
+echo "***********************************"
+mkdir -p distro/usr/lib
+make -C src/librcp
+if [ ! -f src/librcp/librcp.a ]
+then
+	echo "Error: cannot compile librcp"
+	exit 1
+fi
+
+echo 
+echo 
+echo "***********************************"
+echo " xinetd"
+echo "***********************************"
+cd src/system/xinetd-2.3.14; ./configure  --prefix=/opt/rcp; cd $TOP
+if [ ! -f src/system/xinetd-2.3.14/Makefile ]
+then
+	echo "Error: cannot configure xinetd"
+	exit 1
+fi
+
+
+if [ "$WITH_SNMP" == "yes" ]
+then
+	echo 
+	echo 
+	echo "***********************************"
+	echo " net-snmp"
+	echo "***********************************"
+	cd src/system/net-snmp-5.7.1; 
+	./configure --prefix=/opt/rcp --with-default-snmp-version="2" --with-openssl=no --disable-scripts  --with-sys-contact="@@no.where" --with-sys-location="Unknown" --with-logfile="/opt/rcp/var/log/snmpd.log" --with-persistent-directory="/opt/rcp/var/net-snmp" --disable-manuals --disable-mibs  --disable-applications --disable-embedded-perl --with-perl-modules="no" --with-defaults --with-out-transports="Unix TCP" --with-out-mib-modules=smux
+	cd $TOP
+	if [ ! -f src/system/net-snmp-5.7.1/Makefile ]
+	then
+		echo "Error: cannot configure net-snmp"
+		exit 1
+	fi
+fi
+
+
+echo 
+echo 
+echo "***********************************"
+echo " tftp"
+echo "***********************************"
+cd src/system/netkit-tftp-0.17; ./configure --prefix=/opt/rcp; cd $TOP
+if [ ! -f src/system/netkit-tftp-0.17/MCONFIG ]
+then
+	echo "Error: cannot configure netkit-tftp"
+	exit 1
+fi
+
+
+echo 
+echo 
+echo "***********************************"
+echo " telnet client and server"
+echo "***********************************"
+cd src/system/telnet-bsd-1.2; ./configure --prefix=/opt/rcp; cd $TOP
+if [ ! -f src/system/telnet-bsd-1.2/Makefile ]
+then
+	echo "Error: cannot configure telnet-bsd"
+	exit 1
+fi
+
+
+echo 
+echo 
+echo "***********************************"
+echo " ftp server"
+echo "***********************************"
+cd src/system/pure-ftpd-1.0.35; LIBS="`pwd`/../../librcp/librcp.a -lpthread -lrt" ./configure --prefix=/opr/rcp --with-minimal --without-banner; cd $TOP
+if [ ! -f src/system/pure-ftpd-1.0.35/Makefile ]
+then
+	echo "Error: cannot configure pure-ftpd"
+	exit 1
+fi
+
+echo 
+echo 
+echo "***********************************"
+echo " openntpd"
+echo "***********************************"
+cd src/system/openntpd-3.9p1; LIBS="`pwd`/../../librcp/librcp.a -lpthread -lrt" ./configure --prefix=/opt/rcp --with-privsep-user=rcp --with-privsep-path=/opt/rcp/var/transport --with-builtin-arc4random; cd $TOP
+if [ ! -f src/system/openntpd-3.9p1/Makefile ]
+then
+	echo "Error: cannot configure openntpd"
+	exit 1
+fi
+
+make -C src/librcp clean
+rm -fr distro
+
+#**************************
+# generate Makefile
+#**************************
+echo 
+echo 
+echo "***********************************"
+echo " generate Makefile"
+echo "***********************************"
+echo "all: without" > Makefile
+echo >> Makefile
+echo "CFLAGS += -fstack-protector-all -Wall" >> Makefile
+echo "CXXFLAGS += -fstack-protector-all -Wall" >> Makefile
+echo "PROGRAMS  = src/librcp/config" >> Makefile
+echo "PROGRAMS  += src/services" >> Makefile
+
+if [ "$WITH_OSPF" == "yes" ]
+then
+	echo "PROGRAMS  += src/ospf" >> Makefile
+fi
+
+echo "PROGRAMS  += src/acl" >> Makefile
+echo "PROGRAMS  += src/dns" >> Makefile
+echo "PROGRAMS  += src/router" >> Makefile
+
+if [ "$WITH_DHCP" == "yes" ]
+then
+	echo "PROGRAMS  += src/dhcp" >> Makefile
+fi
+
+if [ "$WITH_RIP" == "yes" ]
+then
+	echo "PROGRAMS  += src/rip" >> Makefile
+fi
+
+echo "PROGRAMS  += src/cli" >> Makefile
+echo "PROGRAMS  += src/http" >> Makefile
+
+if [ "$WITH_NETMON" == "yes" ]
+then
+	echo "PROGRAMS  += src/netmon" >> Makefile
+fi
+
+echo "PROGRAMS  += src/utils/rcplog" >> Makefile
+echo "PROGRAMS  += src/utils/rtclean" >> Makefile
+echo "PROGRAMS  += src/utils/login" >> Makefile
+echo "PROGRAMS  += src/utils/rcpwait" >> Makefile
+
+if [ "$WITH_NETMON" == "yes" ]
+then
+	echo "PROGRAMS  += src/utils/resolver" >> Makefile
+	echo "PROGRAMS  += src/utils/rcpmon-tcp" >> Makefile
+	echo "PROGRAMS  += src/utils/rcpmon-http" >> Makefile
+fi
+
+echo "PROGRAMS  += src/xmlstats" >> Makefile
+
+echo "SYSTEM =" >> Makefile
+echo "SYSTEM += src/system/xinetd-2.3.14" >> Makefile
+
+if [ "$WITH_SNMP" == "yes" ]
+then
+	echo "SYSTEM += src/system/net-snmp-5.7.1" >> Makefile
+fi
+
+echo "SYSTEM += src/system/netkit-tftp-0.17" >> Makefile
+echo "SYSTEM += src/system/telnet-bsd-1.2" >> Makefile
+echo "SYSTEM += src/system/pure-ftpd-1.0.35" >> Makefile
+echo "SYSTEM += src/system/openntpd-3.9p1" >> Makefile
+
+echo "AFTER_SYSTEM  = "  >> Makefile
+if [ "$WITH_SNMP" == "yes" ]
+then
+	echo "AFTER_SYSTEM += src/utils/snmptrap" >> Makefile
+fi
+
+echo "include buildtools/Makefile.rcp" >> Makefile
+echo >> Makefile
+
+cat >> Makefile << EOF
+get_programs: programs after_system
+	install -s -m755 src/system/xinetd-2.3.14/xinetd/xinetd distro/sbin/xinetd
+	install -s -m755 src/system/netkit-tftp-0.17/tftpd/tftpd distro/sbin/tftpd
+	install -s -m755 src/system/telnet-bsd-1.2/telnet/telnet distro/bin/telnet
+	install -s -m755 src/system/telnet-bsd-1.2/telnetd/in.telnetd distro/sbin/in.telnetd
+	install -s -m755 src/system/pure-ftpd-1.0.35/src/pure-ftpd distro/sbin/pure-ftpd
+	install -s -m755 src/system/openntpd-3.9p1/ntpd distro/sbin/ntpd
+EOF
+
+echo >> Makefile
+echo "without: get_programs" >> Makefile
+if [ "$WITH_NETMON" == "no" ]
+then
+cat >> Makefile << EOF
+	rm distro/etc/init.d/rcpnetmon
+EOF
+fi
+if [ "$WITH_DHCP" == "no" ]
+then
+cat >> Makefile << EOF
+	rm distro/etc/init.d/rcpdhcp
+EOF
+fi
+if [ "$WITH_OSPF" == "no" ]
+then
+cat >> Makefile << EOF
+	rm distro/etc/init.d/rcpospf
+EOF
+fi
+if [ "$WITH_RIP" == "no" ]
+then
+cat >> Makefile << EOF
+	rm distro/etc/init.d/rcprip
+EOF
+fi
+echo >> Makefile
+echo >> Makefile
+
+
+if [ "$WITH_SNMP" == "yes" ]
+then
+cat >> Makefile << EOF
+	install -c -m 0755 src/system/net-snmp-5.7.1/agent/.libs/snmpd distro/sbin/snmpd
+	install -c -m 0644 -s src/system/net-snmp-5.7.1/agent/.libs/libnetsnmpagent.so  distro/lib/libnetsnmpagent.so
+	install -c -m 0644 -s src/system/net-snmp-5.7.1/agent/.libs/libnetsnmpmibs.so distro/lib/libnetsnmpmibs.so
+	install -c -m 0644 -s src/system/net-snmp-5.7.1/snmplib/.libs/libnetsnmp.so distro/lib/libnetsnmp.so
+	cp src/system/net-snmp-5.7.1/snmplib/.libs/libnetsnmp.a distro/usr/lib/.
+EOF
+fi
+
+cat >> Makefile << EOF
+
+install: all
+	rm -f /opt/rcp/lib/libnetsnmpagent.so.30
+	rm -f /opt/rcp/lib/libnetsnmpmibs.so.30
+	rm -f /opt/rcp/lib/libnetsnmp.so.30
+	rm -f /opt/rcp/bin/snmpinform
+	mkdir -p /opt/rcp/var/www
+	cp src/http/www/*.js /opt/rcp/var/www/.
+	cp src/http/www/*.html /opt/rcp/var/www/.
+	cp src/http/www/*.rcps /opt/rcp/var/www/.
+	mkdir -p /opt/rcp; cp -a distro/* /opt/rcp/.
+	ln -s /opt/rcp/lib/libnetsnmpagent.so /opt/rcp/lib/libnetsnmpagent.so.30
+	ln -s /opt/rcp/lib/libnetsnmpmibs.so /opt/rcp/lib/libnetsnmpmibs.so.30
+	ln -s /opt/rcp/lib/libnetsnmp.so /opt/rcp/lib/libnetsnmp.so.30
+	ln -s /opt/rcp/bin/snmptrap /opt/rcp/bin/snmpinform
+
+uninstall:
+	rm -fr /opt/rcp/bin
+	rm -fr /opt/rcp/etc
+	rm -fr /opt/rcp/lib
+	rm -fr /opt/rcp/libexec
+	rm -fr /opt/rcp/sbin
+	rm -fr /opt/rcp/share
+	rm -fr /opt/rcp/usr
+	rm -fr /opt/rcp/var
+
+EOF
+
+
+# compile tools
+
+echo 
+echo 
+echo "***********************************"
+echo " building compilation tools"
+echo "***********************************"
+make -C buildtools/cmdparser
+if [ -f buildtools/cmdparser/cmdparser ]
+then
+	echo "Tools compiled"
+else
+	echo "Error: failed to compile build tools"
+fi

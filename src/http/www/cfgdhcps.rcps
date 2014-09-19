@@ -1,0 +1,390 @@
+<!DOCTYPE html><html>
+<head><title>DHCP Server</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var cmd = "ip dhcp server && ";
+	
+	if (idr2.value.length) {
+		if (!checkHostname(idr2.value)) {
+			printError("Error: invalid domain name<br/>");
+			return;
+		}
+		cmd += "domain-name " + idr2.value + " && ";
+	}
+	else
+		cmd += "no domain-name && ";
+	
+	if (idr3.value.length) {
+		if (checkIp(idr3.value) == 0) {
+			printError("Error: invalid IP address for name server 1<br/>");
+			return;
+		}
+		if (idr4.value.length) {
+			if (checkIp(idr4.value) == 0) {
+				printError("Error: invalid IP address for name server 2<br/>");
+				return;
+			}
+			cmd += "dns-server " + idr3.value + " " + idr4.value + " && ";
+		}
+		else
+			cmd += "dns-server " + idr3.value + " && ";
+	}
+	else
+		cmd += "no dns-server && ";
+		
+	if (idr5.value.length) {
+		if (checkIp(idr5.value) == 0) {
+			printError("Error: invalid IP address for NTP server 1<br/>");
+			return;
+		}
+		if (idr6.value.length) {
+			if (checkIp(idr6.value) == 0) {
+				printError("Error: invalid IP address for NTP server 2<br/>");
+				return;
+			}
+			cmd += "ntp-server " + idr5.value + " " + idr6.value + " && ";
+		}
+		else
+			cmd += "ntp-server " + idr5.value + " && ";
+	}
+	else
+		cmd += "no ntp-server && ";
+		
+	cmd += "no network && ";		
+
+	if (idr0a.value.length && idr0m.value.length) {
+		if (checkIp(idr0a.value) == 0) {
+			printError("Error: invalid IP address for network 1<br/>");
+			return;
+		}
+		if (checkMask(idr0m.value) == 0) {
+			printError("Error: invalid IP address for network 1<br/>");
+			return;
+		}
+		cmd += "network " + idr0a.value + "/" + idr0m.value + " && ";
+		
+		if (idr0r1.value.length) {
+			if (checkIp(idr0r1.value) == 0) {
+				printError("Error: invalid IP range for network 1<br/>");
+				return;
+			}
+			cmd += "range " + idr0r1.value + " ";
+		}
+		if (idr0r2.value.length) {
+			if (checkIp(idr0r2.value) == 0) {
+				printError("Error: invalid IP range for network 1<br/>");
+				return;
+			}
+			cmd += idr0r2.value + " && ";
+		}
+		
+		if (idr0gw1.value.length) {
+			if (checkIp(idr0gw1.value) == 0) {
+				printError("Error: invalid IP address for network 1, router 1<br/>");
+				return;
+			}
+			if (idr0gw2.value.length) {
+				if (checkIp(idr0gw1.value) == 0) {
+					printError("Error: invalid IP address for network 1, router 2<br/>");
+					return;
+				}
+				cmd += "default-router " + idr0gw1.value + " " + idr0gw2.value + " && ";
+			}
+			else
+				cmd += "default-router " + idr0gw1.value + " && ";
+		}
+		else
+			cmd += "no default-router && ";
+		
+		
+		if (idr0day.value.length == 0 || idr0hour.value.length == 0 || idr0minute.value.length == 0) {
+			printError("Error: invalid lease time for network 1<br/>");
+			return;
+		}
+		else {
+			if (checkDay(idr0day.value) == 0 ||
+			    checkHour(idr0hour.value) == 0 ||
+			    checkMinute(idr0minute.value) == 0) {
+				printError("Error: invalid lease time for network 1<br/>");
+				return;
+			}
+			cmd += "lease " + idr0day.value + " " + idr0hour.value + " " + idr0minute.value + " && ";
+		}
+
+		cmd += "exit && ";
+	}
+
+	
+	if (idr1a.value.length && idr1m.value.length) {
+		if (checkIp(idr1a.value) == 0) {
+			printError("Error: invalid IP address for network 2<br/>");
+			return;
+		}
+		if (checkMask(idr1m.value) == 0) {
+			printError("Error: invalid IP address for network 2<br/>");
+			return;
+		}
+		cmd += "network " + idr1a.value + "/" + idr1m.value + " && ";
+		
+		if (idr1r1.value.length) {
+			if (checkIp(idr1r1.value) == 0) {
+				printError("Error: invalid IP range for network 2<br/>");
+				return;
+			}
+			cmd += "range " + idr1r1.value + " ";
+		}
+		if (idr1r2.value.length) {
+			if (checkIp(idr1r2.value) == 0) {
+				printError("Error: invalid IP range for network 2<br/>");
+				return;
+			}
+			cmd += idr1r2.value + " && ";
+		}
+		
+		if (idr1gw1.value.length) {
+			if (checkIp(idr1gw1.value) == 0) {
+				printError("Error: invalid IP address for network 2, router 1<br/>");
+				return;
+			}
+			if (idr1gw2.value.length) {
+				if (checkIp(idr1gw1.value) == 0) {
+					printError("Error: invalid IP address for network 2, router 2<br/>");
+					return;
+				}
+				cmd += "default-router " + idr1gw1.value + " " + idr1gw2.value + " && ";
+			}
+			else
+				cmd += "default-router " + idr1gw1.value + " && ";
+		}
+		else
+			cmd += "no default-router && ";
+		
+		
+		if (idr1day.value.length == 0 || idr1hour.value.length == 0 || idr1minute.value.length == 0) {
+			printError("Error: invalid lease time for network 2<br/>");
+			return;
+		}
+		else {
+			if (checkDay(idr1day.value) == 0 ||
+			    checkHour(idr1hour.value) == 0 ||
+			    checkMinute(idr1minute.value) == 0) {
+				printError("Error: invalid lease time for network 2<br/>");
+				return;
+			}
+			cmd += "lease " + idr1day.value + " " + idr1hour.value + " " + idr1minute.value + " && ";
+		}
+		cmd += "exit && ";
+	}
+
+	if (idr2a.value.length && idr2m.value.length) {
+		if (checkIp(idr2a.value) == 0) {
+			printError("Error: invalid IP address for network 3<br/>");
+			return;
+		}
+		if (checkMask(idr2m.value) == 0) {
+			printError("Error: invalid IP address for network 3<br/>");
+			return;
+		}
+		cmd += "network " + idr2a.value + "/" + idr2m.value + " && ";
+		
+		if (idr2r1.value.length) {
+			if (checkIp(idr2r1.value) == 0) {
+				printError("Error: invalid IP range for network 3<br/>");
+				return;
+			}
+			cmd += "range " + idr2r1.value + " ";
+		}
+		if (idr2r2.value.length) {
+			if (checkIp(idr2r2.value) == 0) {
+				printError("Error: invalid IP range for network 3<br/>");
+				return;
+			}
+			cmd += idr2r2.value + " && ";
+		}
+		
+		if (idr2gw1.value.length) {
+			if (checkIp(idr2gw1.value) == 0) {
+				printError("Error: invalid IP address for network 3, router 1<br/>");
+				return;
+			}
+			if (idr2gw2.value.length) {
+				if (checkIp(idr2gw1.value) == 0) {
+					printError("Error: invalid IP address for network 3, router 2<br/>");
+					return;
+				}
+				cmd += "default-router " + idr2gw1.value + " " + idr2gw2.value + " && ";
+			}
+			else
+				cmd += "default-router " + idr2gw1.value + " && ";
+		}
+		else
+			cmd += "no default-router && ";
+		
+		
+		if (idr2day.value.length == 0 || idr2hour.value.length == 0 || idr2minute.value.length == 0) {
+			printError("Error: invalid lease time for network 3<br/>");
+			return;
+		}
+		else {
+			if (checkDay(idr2day.value) == 0 ||
+			    checkHour(idr2hour.value) == 0 ||
+			    checkMinute(idr2minute.value) == 0) {
+				printError("Error: invalid lease time for network 3<br/>");
+				return;
+			}
+			cmd += "lease " + idr2day.value + " " + idr2hour.value + " " + idr2minute.value + " && ";
+		}
+		cmd += "exit && ";
+	}
+
+	if (idr3a.value.length && idr3m.value.length) {
+		if (checkIp(idr3a.value) == 0) {
+			printError("Error: invalid IP address for network 4<br/>");
+			return;
+		}
+		if (checkMask(idr3m.value) == 0) {
+			printError("Error: invalid IP address for network 4<br/>");
+			return;
+		}
+		cmd += "network " + idr3a.value + "/" + idr3m.value + " && ";
+		
+		if (idr3r1.value.length) {
+			if (checkIp(idr3r1.value) == 0) {
+				printError("Error: invalid IP range for network 4<br/>");
+				return;
+			}
+			cmd += "range " + idr3r1.value + " ";
+		}
+		if (idr3r2.value.length) {
+			if (checkIp(idr3r2.value) == 0) {
+				printError("Error: invalid IP range for network 4<br/>");
+				return;
+			}
+			cmd += idr3r2.value + " && ";
+		}
+		
+		if (idr3gw1.value.length) {
+			if (checkIp(idr3gw1.value) == 0) {
+				printError("Error: invalid IP address for network 4, router 1<br/>");
+				return;
+			}
+			if (idr3gw2.value.length) {
+				if (checkIp(idr3gw1.value) == 0) {
+					printError("Error: invalid IP address for network 4, router 2<br/>");
+					return;
+				}
+				cmd += "default-router " + idr3gw1.value + " " + idr3gw2.value + " && ";
+			}
+			else
+				cmd += "default-router " + idr3gw1.value + " && ";
+		}
+		else
+			cmd += "no default-router && ";
+		
+		
+		if (idr3day.value.length == 0 || idr3hour.value.length == 0 || idr3minute.value.length == 0) {
+			printError("Error: invalid lease time for network 4<br/>");
+			return;
+		}
+		else {
+			if (checkDay(idr3day.value) == 0 ||
+			    checkHour(idr3hour.value) == 0 ||
+			    checkMinute(idr3minute.value) == 0) {
+				printError("Error: invalid lease time for network 4<br/>");
+				return;
+			}
+			cmd += "lease " + idr3day.value + " " + idr3hour.value + " " + idr3minute.value + " && ";
+		}
+		cmd += "exit && ";
+	}
+	
+	cmd += "exit && ";
+	
+	if (idr1.value == "enabled")
+		cmd += "service dhcp && ";
+	else
+		cmd += "no service dhcp && ";
+	
+	
+	cmd += "copy run start";
+	restCmd(cmd);
+}
+
+function showConfig() {
+	var cmd = "show configuration dhcp";
+	restCmd(cmd);
+}
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post" id="myform">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="3" align="center" ><br/><h2>DHCP Server Configuration</h2><br/></td></tr>
+
+<tr><td>DHCP Server</td>
+<td><select name="status" id="idr1">
+<option value="enabled" <?rcps dhcps_enabled>>enabled</option>
+<option value="disabled" <?rcps dhcps_disabled>>disabled</option>
+</select></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<td>Domain name</td>
+<td colspan="2"><input name="r2" type="text" id="idr2" size="30" maxlength="64" value="<?rcps dhcps_domain>"/></td>
+</tr>
+
+<td>DNS Servers</td>
+<td><input name="r3" type="text" id="idr3" size="15" maxlength="15" value="<?rcps dhcps_dns1>"/></td>
+<td><input name="r4" type="text" id="idr4" size="15" maxlength="15" value="<?rcps dhcps_dns2>"/></td>
+</tr>
+
+<td>NTP Servers</td>
+<td><input name="r5" type="text" id="idr5" size="15" maxlength="15" value="<?rcps dhcps_ntp1>"/></td>
+<td><input name="r6" type="text" id="idr6" size="15" maxlength="15" value="<?rcps dhcps_ntp2>"/></td>
+</tr>
+
+
+<tr>
+<td colspan="3">&nbsp;</td>
+</tr>
+
+<?rcps dhcps_net>
+<?rcps dhcps_net>
+<?rcps dhcps_net>
+<?rcps dhcps_net>
+
+<tr>
+<td colspan="3">&nbsp;</td>
+</tr><tr>
+<td colspan="3" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="3">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

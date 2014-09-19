@@ -1,0 +1,59 @@
+***About***
+
+RCP100 (Router Control Plane) is a modular IP router for Linux platforms. It can
+be used as a standalone router, or it can be deployed as an embedded router
+in a virtualized environment. The modular architecture allows rapid introduction
+of new features and functionality, including support for custom hardware.
+
+Features:
+
+    Industry standard command line interface.
+    Web interface.
+    Telnet, FTP and TFTP access.
+    NTP client and server.
+    DNS proxy cache.
+    DHCP server, relay.
+    Static routes, blackhole routes, static ARP, proxy ARP.
+    RIP version 2 (RFC 2082, RFC 2453).
+    OSPF version 2 (RFC 2328).
+    Equal Cost Multipath.
+    Access Control Lists.
+    Masquerade NAT.
+    SNMP v1, v2c and v3.
+    Network infrastructure monitoring.
+    VLAN (802.1Q) interface support.
+    
+The software is released under GPL v2 license and it works on 64bit Linux platforms.
+
+***Installation***
+
+Before you start, you need to install the following packages:
+
+    ncurses-devel
+    bridge-utils
+    traceroute
+
+Download the latest RCP version from http://rcp100.sourceforge.net
+and unpack the archive:
+
+    $ tar -xjvf rcp100-X.Y.Z.tar.bz2
+    $ cd rcp100-X.Y.Z
+
+Compile and install the software:
+
+    $ ./configure
+    $ make
+    $ sudo make install
+
+The installation takes place in /opt/rcp.
+
+***Running the software***
+Run /opt/rcp/bin/start.sh script to start the software.
+Run /opt/rcp/bin/stop.sh script to stop the software.
+
+***Documentation***
+http://rcp100.sourceforge.net
+
+Enjoy,
+
+Copyright 2012-2013 RCP100 Team (rcpteam@yahoo.com)

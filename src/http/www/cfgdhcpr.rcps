@@ -1,0 +1,199 @@
+<!DOCTYPE html><html>
+<head><title>DHCP Relay</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var rootnode=document.getElementById("myform")
+	var walker=document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT, null, false)
+
+	var cmd = "ip dhcp relay && no server-group && exit && ";
+	var ifname = "";
+	var iftype = "";
+	var ip1 = "";
+	var ip2 = "";
+	var ip3 = "";
+	var ip4 = "";
+	var group = 0;
+	while (walker.nextNode()) {
+		if (walker.currentNode.tagName == "INPUT") {
+			if (walker.currentNode.className == "ifname") {
+				id = walker.currentNode.getAttribute("id");
+				elem =  document.getElementById(id).value;
+				if (elem != ifname) {
+					ifname = elem;
+					iftype = "";
+				}
+			}
+			else if (walker.currentNode.className == "iftype") {
+				id = walker.currentNode.getAttribute("id");
+				iftype =  document.getElementById(id).value;
+			}
+			else if (walker.currentNode.className == "ifenable") {
+				id = walker.currentNode.getAttribute("id");
+				cmd += "interface " + iftype + " " + ifname + " && ";
+				if (document.getElementById(id).checked)
+					cmd += "ip dhcp relay enable && ";
+				else
+					cmd += "no ip dhcp relay enable && ";
+				cmd += "exit && ";
+			}
+			else if (walker.currentNode.className == "maxhop") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (checkDhcpMaxHops(elem))
+					cmd += "ip dhcp relay && max-hops " + elem + " && exit && ";
+				else {
+					printError("Error: invalid maximum number of hops<br/>");
+					document.getElementById("restResult").innerHTML += "A value between 1 and 16 is expected.";
+					return;
+				}					
+			}
+			else if (walker.currentNode.className == "o82") {
+				id = walker.currentNode.getAttribute("id");
+				cmd += "ip dhcp relay && ";
+				if (document.getElementById(id).checked)
+					cmd += "option && exit &&"
+				else
+					cmd += "no option && exit &&"
+			}
+			else if (walker.currentNode.className == "sd") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (checkDhcpServDelay(elem))
+					cmd += "ip dhcp relay && service-delay " + elem + " && exit && ";
+				else {
+					printError("Error: invalid service delay value<br/>");
+					document.getElementById("restResult").innerHTML += "A value between 0 and 100 is expected.";
+					return;
+				}					
+			}
+			else if (walker.currentNode.className == "sg1") {
+				ip1 = "";
+				ip2 = "";
+				ip3 = "";
+				ip4 = "";
+				group++;
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkIp(elem))
+						ip1 = elem;
+					else {
+						printError("Error: invalid IP address for group " + group + ", server 1<br/>");
+						return;
+					}
+				}
+			}
+			else if (walker.currentNode.className == "sg2") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkIp(elem))
+						ip2 = elem;
+					else {
+						printError("Error: invalid IP address for group " + group + ", server 2<br/>");
+						return;
+					}
+				}
+			}
+			else if (walker.currentNode.className == "sg3") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkIp(elem))
+						ip3 = elem;
+					else {
+						printError("Error: invalid IP address for group " + group + ", server 3<br/>");
+						return;
+					}
+				}
+			}
+			else if (walker.currentNode.className == "sg4") {
+				id = walker.currentNode.getAttribute("id");
+				elem = document.getElementById(id).value;
+				if (elem.length) {
+					if (checkIp(elem))
+						ip4 = elem;
+					else {
+						printError("Error: invalid IP address for group " + group + ", server 4<br/>");
+						return;
+					}
+				}
+				
+				if (ip1.length || ip2.length || ip3.length || ip4.length) {
+					cmd += "ip dhcp relay && server-group ";
+					if (ip1.length)
+						cmd += ip1 + " ";
+					if (ip2.length)
+						cmd += ip2 + " ";
+					if (ip3.length)
+						cmd += ip3 + " ";
+					if (ip4.length)
+						cmd += ip4 + " ";
+					cmd += " && exit && ";
+				}
+			}
+		}
+	}
+	
+	cmd += "copy run start";
+	restCmd(cmd);	
+}
+
+function showConfig() {
+	var cmd = "show configuration dhcp";
+	restCmd(cmd);
+}
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post" id="myform">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>DHCP Relay Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+<?rcps dhcpr_o>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td colspan="3"><b>Server Groups</b> (IP Addresses)</tr>
+
+<?rcps dhcpr_g>
+
+<tr><td colspan="4" align="center" ><br/></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td colspan="3"><b>Interfaces</b></tr>
+
+<?rcps dhcpr_i>
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="5">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

@@ -1,0 +1,14 @@
+Package: rcp100
+Version: RCPVER-1
+Architecture: amd64
+Maintainer: RCP100 Team <rcpteam@yahoo.com>
+Installed-Size: 10342
+Depends: traceroute, bridge-utils, iptables, lsof, libc6
+Section: net
+Priority: extra
+Homepage: http://rcp100.sourceforge.net
+Description: Modular IP router for Linux platforms
+ RCP100 is a modular router control plane for Linux platforms. It can be used
+ as a standalone router, or it can be deployed as an embedded router in a
+ virtualized environment. The modular architecture allows rapid introduction
+ of new features and functionality, including support for custom hardware. 

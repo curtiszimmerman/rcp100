@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DATE=`date`
+echo "INIT: $DATE: starting RCP services" >> /opt/rcp/var/log/restart
+while [ 1 ]
+do
+	/opt/rcp/bin/rcpservicesd
+	DATE=`date`
+	echo "INIT: $DATE: RCP services process crashed, restarting..."  >> /opt/rcp/var/log/restart
+	rm -f /var/tmp/rcpsocket
+	sleep 3
+done

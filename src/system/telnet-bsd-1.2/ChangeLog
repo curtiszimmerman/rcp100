@@ -1,0 +1,196 @@
+2005-06-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* release version 1.2
+
+	* configure.in: Check for -fpie/-pie support.
+	* telnet/Makefile.am: Compile/Link with -fpie/-pie if supported.
+	* telnetd/Makefile.am: Likewise.
+
+	* telnet/commands.c (_GNU_SOURCE): Define.
+
+	* telnet/telnet.c: Add SLC+ENV fix.
+
+	* telnet/commands.c: Add OWL patch to modify behavior of
+	export variable.
+
+2005-04-05  Mads Martin Joergensen  <mmj@suse.de>
+
+	* telnet/commands.c: Fix last execl argument.
+
+2004-06-11  Mads Martin Joergensen  <mmj@suse.de>
+
+	* telnetd/sys_term.c (cleanup): Block signals to avoid
+	deadlock.
+
+2004-02-15  Andreas Schwab  <schwab@suse.de>
+
+	* telnet/externs.h: Include unistd.h to ensure that
+	_POSIX_VDISABLE is properly defined.
+
+2004-02-13  Thorsten Kukuk <kukuk@suse.de>
+
+	* release version 1.1
+
+2004-02-13  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add m4.
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): New variable.
+	* configure.in (AC_OUTPUT): Add m4/Makefile.
+	(AC_OUTPUT): Remove intl/Makefile.
+
+2002-12-04  Mads Martin Joergensen  <mmj@suse.de>
+
+	* telnet/utilities.c: Fix one version of strcpy, gotten
+	from the OpenBSD tree
+
+2002-02-13  Mads Martin Joergensen  <mmj@suse.de>
+
+	* telnet/telnet.c: Increased the temporary buffer size in
+	telnet to fix problem with long hostnames when telnetting
+	to a Solaris box.
+
+2001-07-27  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnetd/state.c: Add fix for possible problems with buffer
+	overruns
+	* telnetd/utility.c: Likewise.
+
+2001-03-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* release version 1.0
+
+	* telnetd/in.telnetd.8: Add changes from OpenBSD.
+	* telnetd/telnetd.c: Likewise.
+
+2001-03-12  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/main.c: Add changes from OpenBSD.
+	* telnet/commands.c: Likewise.
+	* telnet/telnet.c: Likewise.
+	* telnet/telnet.1: Likewise.
+	* telnet/externs.h: Likewise.
+	* telnetd/ext.h: Likewise.
+	* telnetd/sys_term.c: Likewise.
+
+2001-03-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnetd/global.c: Remove DIAGNOSTICS ifdef, is always set
+	* telnetd/telnetd.c: Likewise
+	* telnetd/utility.c: Likewiwe
+
+	* telnetd/ext.h: Adjust prototypes (remove autologin parameter)
+
+	* telnetd/sys_term.c: Remove never called autologin code
+
+2001-02-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/commands.c (tn): Fix seg.faults if no /etc/services is
+	  present [Bug #3647]
+	* telnetd/telnet.c: Fix wrong parameter for getnameinfo call, so
+	  telnet to hosts, where reverse lookup does not work, works now again.
+
+2001-01-30  Andreas Schwab  <schwab@suse.de>
+
+	* ping/ping.c: Fix checksum computation, correctly handle small
+	  packet sizes.
+
+2000-11-03  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/commands.c (tn): Add changes from OpenBSD.
+
+	* fingerd/in.fingerd.8: Add changes from OpenBSD.
+
+	* finger/util.c (userinfo): Add format string to warn function call.
+
+2000-10-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* Remove sources from iputils package
+
+2000-05-25  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/*: Fix problem with detecting telnet port
+	* rwhod/rc.config.rwhod: New, for SuSE Linux
+	* rwhod/rwhod.init: New, for SuSE Linux
+
+2000-02-04  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnetd/telnetd.c: Make a copy of the -L arg.
+
+2000-01-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* rdisc/*: New, from iputils.
+	* tracepath/*: Likewise.
+	* traceroute6/*: Likewise.
+
+2000-01-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	* finger/finger.1: Update from OpenBSD cvs.
+
+	* finger/finger.c (main): Use MAXHOSTNAMELEN for domain buffer.
+
+	* fingerd/fingerd.c (main): Make the reverse name lookup up
+	  for the protocol the client uses.
+
+2000-01-12  Thorsten Kukuk  <kukuk@suse.de>
+
+	* ping6: New, from inet-apps-0.36
+	* telnetd: New, from OpenBSD cvs
+
+2000-01-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/main.c: Update from OpenBSD cvs
+	* telnet/commands.c: Likewise.
+	* telnet/telnet.1: Likewise.
+
+	* finger/finger.c: Update from OpenBSD cvs
+	* finger/finger.1: Likewise.
+	* finger/net.c: Likewise.
+
+	* fingerd/fingerd.c: New, port from OpenBSD cvs
+
+2000-01-10  Thorsten Kukuk  <kukuk@suse.de>
+
+	* telnet/commands.c: Enable IPv6 support.
+
+	* finger/net.c (netfinger): Add IPv6 support.
+
+2000-01-04  Thorsten Kukuk  <kukuk@suse.de>
+
+	* rexecd: Removed.
+
+1999-10-25  Thorsten Kukuk  <kukuk@suse.de>
+
+	* ruptime/ruptime.1: Update from OpenBSD cvs.
+	* telnet/telnet.1: Likewise.
+
+1999-10-08  Thorsten Kukuk  <kukuk@suse.de>
+
+	* finger/util.c: Update from OpenBSD cvs.
+
+	* finger/finger.1: Remove BSD specific text.
+
+	* ruptime/ruptime.c: New.
+
+	* rexecd/rexecd.c: Update from OpenBSD cvs.
+
+	* rwhod/rwhod.c: New, add support for Alpha.
+
+1999-07-08  Thorsten Kukuk  <kukuk@suse.de>
+
+	* rwho: New sources from OpenBSD
+	* telnet: New sources from OpenBSD
+
+1999-05-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* finger/util.c: Include paths.h, use _PATH_MAILDIR.
+	* finger/finger.h: Remove wrong path for Maildir.
+
+1999-04-20  Thorsten Kukuk  <kukuk@suse.de>
+
+	* rexecd/rexecd.c: Use libauth.
+	* configure.in: check for libauth/libauth.h.
+
+1999-04-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* rexecd/rexecd.c: New port to Linux.

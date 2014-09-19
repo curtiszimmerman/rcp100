@@ -1,0 +1,6 @@
+
+This is a port of OpenBSD telnet tools for SuSE Linux.
+The OpenBSD telnet tools are maintained and contains
+all security fixes.
+
+  Thorsten Kukuk <kukuk@suse.de>

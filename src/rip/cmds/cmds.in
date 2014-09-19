@@ -1,0 +1,111 @@
+#*******************************************
+# config
+#*******************************************
+M:CLIMODE_CONFIG
+C:no router rip:cliNoRouterRipCmd
+C:router rip:cliRouterRipCmd
+
+H:router:Routing protocol
+H:rip:Routing Information Protocol
+
+#*******************************************
+# interface
+#*******************************************
+M:CLIMODE_INTERFACE | CLIMODE_INTERFACE_BRIDGE| CLIMODE_INTERFACE_VLAN
+C:ip rip md5 secret <rip-password>:cliIpRipMd5
+C:no ip rip md5:cliIpRipMd5
+H:rip:Routing Information Protocol
+H:md5:MD5 authentication
+H:secret:Shared secret
+H:<rip-password>:Password
+
+#*******************************************
+# rip mode
+#*******************************************
+M:CLIMODE_RIP
+C:no network:cliNoNetworkCidrAll
+C:[no] network <cidrnet>:cliNetworkCidrCmd
+C:[no] neighbor <ip>:cliNeighborCmd
+C:[no] passive-interface <interface>:cliPassiveInterfaceCmd
+C:redistribute static [metric <i,1,15>]:cliRedistStaticCmd
+C:no redistribute static:cliRedistStaticCmd
+C:redistribute connected [metric <i,1,15>]:cliRedistConnectedCmd
+C:no redistribute connected:cliRedistConnectedCmd
+C:[no] redistribute connected loopback:cliRedistConnectedSubnetsCmd
+C:redistribute ospf [metric <i,1,15>]:cliRedistOspfCmd
+C:no redistribute ospf:cliRedistOspfCmd
+C:[no] default-information originate:cliDefaultInformationOriginateCmd
+C:update-timer <i,5,60>:cliUpdateTimerCmd
+C:no update-timer:cliUpdateTimerCmd
+
+H:network:Network
+H:<cidrnet>:IP address and prefix length
+H:neighbor:Specify a neighbor
+H:<ip>:IP address
+H:passive-interface:Suppress the sending of routing updates
+H:<interface>:Interface name
+H:redistribute:Redistribute routes from a different protocol
+H:static:Static routes
+H:connected:Connected routes
+H:ospf:OSPF routes
+H:metric:Metric
+H:loopback:Virtual loopback interface addresses
+H:<i,1,15>:RIP metric
+H:distance:Administrative distance
+H:<i,1,255>:Distance value
+H:default-information:Control default route distribution
+H:originate:Distribute the default route
+H:update-timer:RIP update timer
+H:<i,5,60>:Update interval in seconds
+
+M:CLIMODE_RIP
+C:trace prefix <ip>:cliTracePrefixCmd
+C:no trace prefix:cliTracePrefixCmd
+
+H:trace:Trace an IP prefix in RIP packets
+H:prefix:Prefix
+H:<ip>:IP address
+
+#*******************************************
+# all modes
+#*******************************************
+M:CLIMODE_ALL
+C:show ip rip database:cliShowIpRipDatabaseCmd
+C:show ip rip:cliShowIpRipCmd
+
+H:show:Show running system information
+H:ip:IP information
+H:rip:Routing Information Protocol
+H:database:RIP database
+
+M:CLIMODE_ALL
+C:debug rip pkt1:cliDebugRipPkt1
+C:debug rip pkt2:cliDebugRipPkt2
+C:debug rip pkt3:cliDebugRipPkt3
+C:debug rip pkt4:cliDebugRipPkt4
+C:debug rip pkt5:cliDebugRipPkt5
+H:debug:Modify debugging parameters
+H:rip:Routing information protocol
+H:pkt1:10.77.88.0/24 route on br0 from 1.2.3.99, metric 4
+H:pkt2:10.77.88.0/24 route on br0 from 1.2.3.99, metric 6
+H:pkt3:10.77.88.0/24 route on br0 from 1.2.3.99, metric 16
+H:pkt4:10.77.88.0/24 route on br0 from 1.2.3.99, metric 2
+H:pkt5:Default route paket on br0 from 1.2.3.20, metric 1
+
+C:debug rip add <cidr> <ip> <i,1,16>:cliDebugRipAdd
+C:debug rip del <cidr> <ip>:cliDebugRipDel
+H:add:Add route
+H:del:Delete route
+H:<cidr>:Prefix
+H:<ip>:Gateway/neighbor address
+H:<i,1,16>:Metric
+
+M:CLIMODE_ALL_ENABLE
+C:clear ip rip:cliClearIpRipCmd
+
+H:clear:Delete dynamic information
+H:ip:Internet Protocol
+H:rip:Routing information protocol
+
+
+

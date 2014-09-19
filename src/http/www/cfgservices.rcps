@@ -1,0 +1,119 @@
+<!DOCTYPE html><html>
+<head><title>Services</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function restCmd(cmd) {
+	retval = rest(cmd, localStorage.secret);
+}
+
+function saveConfig() {
+	var cmd = "no service telnet && ";
+	if (idr1.value == "enabled") {
+		if (checkPort(idr1p.value) == 0) {
+			printError("Error: invalid port number<br/>");
+			addError("A value between 1 and 65535 is expected.");
+			return;
+		}
+		cmd += "service telnet port " + idr1p.value + " && ";
+	}
+		
+	cmd += "no service ftp && ";
+	if (idr2.value == "enabled")
+		cmd += "service ftp && ";
+		
+	cmd += "no service tftp && ";
+	if (idr3.value == "enabled")
+		cmd += "service tftp && ";
+	
+	cmd += "copy run start";
+	restCmd(cmd);
+}
+
+function showConfig() {
+	var cmd = "show configuration services";
+	restCmd(cmd);
+}
+
+</script>
+
+</head>
+
+
+<body OnLoad="document.myform.password.focus();">
+<div id="page"><br/>
+<form name="myform" method="post">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="5" align="center" ><br/><h2>Basic Services Configuration</h2><br/></td>
+</tr>
+
+<tr><td colspan="5" align="center" ><br/></tr>
+
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><b>Type</b></td>
+<td><b>Status</b></td>
+<td><b>Port</b></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Telnet</td>
+<td><select name="status" id="idr1">
+<option value="enabled" <?rcps telnet_enabled>>enabled</option>
+<option value="disabled" <?rcps telnet_disabled>>disabled</option>
+</select>
+</td><td>
+<input name="r1p" type="text" id="idr1p" size="5" maxlength="5" value="<?rcps telnet_port>"/>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>FTP</td>
+<td><select name="status" id="idr2">
+<option value="enabled" <?rcps ftp_enabled>>enabled</option>
+<option value="disabled" <?rcps ftp_disabled>>disabled</option>
+</select>
+</td><td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>TFTP</td>
+<td><select name="status" id="idr3">
+<option value="enabled" <?rcps tftp_enabled>>enabled</option>
+<option value="disabled" <?rcps tftp_disabled>>disabled</option>
+</select>
+</td><td></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td colspan="5">&nbsp;</td>
+</tr><tr>
+<td colspan="5" align="center">
+<button type="button" onclick="saveConfig()">Save Configuration</button>
+<button type="button" onclick="showConfig()">Current Configuration</button>
+</td></tr>
+<tr><td colspan="3">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

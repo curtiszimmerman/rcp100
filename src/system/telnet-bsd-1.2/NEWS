@@ -1,0 +1,14 @@
+telnet-bsd NEWS -- history of user-visible changes.
+
+Please send bug reports, questions and suggestions to <kukuk@suse.de>.
+
+Version 1.2
+* Compile with -fpie/-pie if supported
+
+Version 1.1
+* Fix -L option
+* Update autoconf/automake/gettext
+
+Version 1.0
+* first initial version
+

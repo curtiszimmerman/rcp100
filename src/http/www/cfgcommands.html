@@ -1,0 +1,68 @@
+<!DOCTYPE html><html>
+<head><title>cli command</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<style>a:link {color:blue} #page {width:700px;background-color:#f0f0ff;border:1px solid;border-radius:10px}
+#restResult {background-color:white;border-radius:10px;box-shadow: 10px 10px 5px #888888;margin:3px}</style>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript">
+function runCmd() {
+	if (!idcmd.value) {
+		printError("Error: you must enter a CLI command<br/>");
+		return;
+	}
+	
+	// build command string
+	command = idcmd.value;
+	retval = rest(command, localStorage.secret);
+}
+</script>
+</head>
+
+
+<body OnLoad="document.myform.idcmd.focus();">
+<div id="page"><br/>
+<form name="myform" method="post" action="javascript:runCmd()">
+<br/>
+<table border="0" cellpadding="3" cellspacing="2" align="center" bgcolor="#f0f0ff">
+
+<tr><td colspan="4" align="center" ><br/><h2>Run CLI Commands</h2><br/></td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td colspan="2"><p>Run one or more regular CLI commands
+separated by <i>" &amp;&amp; "</i>, for example:</p>
+<p style="text-indent:50px"><i>router ospf &amp;&amp; redistribute static</i><p>
+<br/><br/><br/>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>CLI commands:</td>
+<td><input name="commands" type="text" id="idcmd" size="50" maxlength="200"/></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+
+<tr>
+<td colspan="4">&nbsp;</td>
+</tr><tr>
+<td colspan="4" align="center">
+<button type="button" onclick="runCmd()">Run Command</button>
+</td></tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+
+</table></form>
+
+<br/><br/>
+<div id="restResult"></div>
+
+</div>
+</body></html>
+
+

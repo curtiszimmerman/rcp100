@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting router" >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGROUTER+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcprouterd -r donotuse -r veth
+else
+	/opt/rcp/bin/rcprouterd -r donotuse -r veth
+fi
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DATE=`date`
+echo "$DATE: starting dns proxy" >> /opt/rcp/var/log/restart
+
+if [ -n "${RCPDBGDNS+x}" ]
+then
+	valgrind -v --leak-check=full --show-reachable=yes /opt/rcp/bin/rcpdnsd
+else
+	/opt/rcp/bin/rcpdnsd
+fi
+
+

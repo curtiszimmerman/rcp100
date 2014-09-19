@@ -1,0 +1,55 @@
+#*******************************************
+# Network Monitoring
+#*******************************************
+M:CLIMODE_CONFIG
+C:[no] monitor host <ip>:cliMonitorHost
+C:[no] monitor host <domain>:cliMonitorHost
+
+C:monitor tcp <ip> <i,1,65535>:cliMonitorPort
+C:no monitor tcp <ip>:cliMonitorPort
+C:monitor tcp <domain> <i,1,65535>:cliMonitorPort
+C:no monitor tcp <domain>:cliMonitorPort
+
+C:monitor http <ip>[ <i,1,65535>]:cliMonitorPort
+C:no monitor http <ip>:cliMonitorPort
+C:monitor http <domain> [<i,1,65535>]:cliMonitorPort
+C:no monitor http <domain>:cliMonitorPort
+
+C:monitor ssh <ip> [<i,1,65535>]:cliMonitorPort
+C:no monitor ssh <ip>:cliMonitorPort
+C:monitor ssh <domain> [<i,1,65535>]:cliMonitorPort
+C:no monitor ssh <domain>:cliMonitorPort
+
+C:monitor smtp <ip> [<i,1,65535>]:cliMonitorPort
+C:no monitor smtp <ip>:cliMonitorPort
+C:monitor smtp <domain> [<i,1,65535>]:cliMonitorPort
+C:no monitor smtp <domain>:cliMonitorPort
+
+C:[no] monitor ntp <ip>:cliMonitorHost
+C:[no] monitor ntp <domain>:cliMonitorHost
+
+C:[no] monitor dns <ip>:cliMonitorHost
+C:[no] monitor dns <domain>:cliMonitorHost
+
+M:CLIMODE_ALL
+C:debug monitor interval <i,1,100>:cliDebugMonitorInterval
+
+H:monitor:Network monitoring commands
+H:host:Monitor a host using ICMP Echo Request (ping)
+H:tcp:Monitor a TCP server
+H:http:Monitor a HTTP server
+H:ssh:Monitor a SSH server
+H:smtp:Monitor a SMTP server
+H:ntp:Monitor a NTP server
+H:dns:Monitor a DNS server
+H:<ip>:Host IP address
+H:<domain>:Hostname
+H:<i,1,65535>:Port number
+H:interval:Monitoring interval
+H:<i,1,100>:Interval in seconds, default 10 seconds
+
+M:CLIMODE_ALL
+C:show monitor:cliShowNetworkMonitor
+M:CLIMODE_ALL_ENABLE
+C:clear network monitoring:cliClearNetworkMonitor
+H:monitoring:Network monitoring status

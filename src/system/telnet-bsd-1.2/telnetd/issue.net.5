@@ -1,0 +1,43 @@
+.\" Copyright (c) 1994 Peter Tobias <tobias@server.et-inf.fho-emden.de>
+.\" This file may be distributed under the GNU General Public License.
+.\" 
+.\" Changed to -mdoc by David A. Holland <dholland@ftp.uk.linux.org>
+.\" in order to work better with some NetKit maintenance scripts.
+.\"
+.Dd May 22, 1994
+.Dt ISSUE.NET 5 
+.Os "Linux NetKit"
+.Sh NAME
+.Nm issue.net 
+.Nd identification file for telnet sessions
+.Sh DESCRIPTION
+The file 
+.Pa /etc/issue.net
+is a text file which contains a message or system identification to be
+printed before the login prompt of a telnet session. It may contain
+various `%-char' sequences. The following sequences are supported by
+.Ic in.telnetd :
+.Bl -tag -offset indent -compact -width "abcde"
+.It %t
+- show the current tty
+.It %h
+- show the system node name (FQDN)
+.It %D
+- show the name of the NIS domain
+.It %d
+- show the current time and date
+.It %s
+- show the name of the operating system
+.It %m
+- show the machine (hardware) type
+.It %r
+- show the operating system release
+.It %v
+- show the operating system version
+.It %%
+- display a single '%' character
+.El
+.Sh FILES
+.Pa /etc/issue.net
+.Sh "SEE ALSO"
+.Xr in.telnetd 8
